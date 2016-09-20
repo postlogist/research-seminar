@@ -188,7 +188,7 @@ $$ \lambda = 1 / \bar{x} $$
 
 Define your own function with two arguments: x and rate, or use the built-in exponential density function - `dexp()`. See `?dexp`.
 
-The vertical reference line is positioned at the average price. See `?vline` for help on how to add it.
+The vertical reference line is positioned at the average price. See `?geom_vline` for help on how to add it.
 
 
 ```{r Code for exercise on distribution of diamond prices}
