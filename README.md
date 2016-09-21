@@ -5,7 +5,7 @@ This repository contains supporting data, scripts and examples for the research 
 Use [**Clone or Download/Download ZIP**](https://github.com/postlogist/research-seminar/archive/master.zip) button on top of this page or install github software from [here](https://desktop.github.com/) and clone repository in desktop. 
 
 ## Resources
- - [Sofware installation](https://github.com/postlogist/course_dars/tree/master/installation) R installation and configuration help (see README file)
+ - [Sofware installation](https://github.com/postlogist/research-seminar/tree/master/installation) R installation and configuration help (see README file)
 
  
 # Файлы для курса "Научно-исследовательский семинар"
@@ -19,4 +19,4 @@ Use [**Clone or Download/Download ZIP**](https://github.com/postlogist/research-
 Для более удобного отслеживания изменений и обновления можно установить программу  [github](https://desktop.github.com/) и клонировать репозиторий. 
 
 ## Ресурсы
- - [Установка и настройка программ программ](https://github.com/postlogist/course_dars/tree/master/installation) (см. README на той странице)
+ - [Установка и настройка программ программ](https://github.com/postlogist/research-seminar/tree/master/installation) (см. README на той странице)
