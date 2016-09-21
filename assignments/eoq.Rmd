@@ -1,0 +1,34 @@
+---
+title: "Plotting functions (optional assignment)"
+author: Gleb V. Zakhodyakin
+output: html_notebook
+---
+
+## Assignment
+
+Recreate plot from Wikipedia page on [Economic Order Quantity](https://en.wikipedia.org/wiki/Economic_order_quantity).
+Use the parameters (demand, cost, etc.) provided on that page.
+
+**Tip**
+
+You may find helpful the chapter on [graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html) in R for Data Science book, as well as [this advice](http://stackoverflow.com/questions/10747307/legend-placement-ggplot-relative-to-plotting-region) on how to add lines to a legend on Stack Overflow.
+
+![Economic Order Quantity plot](pics/eoq.png)
+
+## Instructions on how to submit your solution
+
+1. Download this Rmarkdown file to your computer. Note, that it requires a picture file - `eoq.png` to reside in the pics subfolder.
+
+2. Put your code producing the target plot in the following code chunk. 
+
+3. Press `Preview` button on the toolbar in RStudio. This should create a eoq.nb.html file in the same folder as eoq.Rmd (this file).
+
+4. Send me the resulting eoq.nb.html file. 
+
+Remember to put your name(s) in the `author:` field on top of this document.
+
+```{r EOQ Plot}
+# Your code here
+
+```
+
