@@ -177,7 +177,7 @@ Plot a histogram of diamond prices based on the `diamonds` dataset. Try to recre
 
 ![Histogram of diamond prices](pics/diamond_prices.png)
 
-A list of color names available in R can be found [here](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf)
+A list of color names available in R can be found [here](http://research.stowers-institute.org/efg/R/Color/Chart/ColorChart.pdf)
 
 The density function for this distribution is the exponential density function:
 
