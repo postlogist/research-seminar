@@ -228,6 +228,8 @@ ggplot(data = diamonds) +
            position = 'fill')
 ```
 
+*Note:* diamonds with `IF` (internally flawless) clarity rating have the best quality. Cf. charts on diamond [clarity](http://www.lumeradiamonds.com/diamond-education/diamond-clarity) and [cut](http://www.gemnation.com/base?processor=getPage&pageName=cut) grades.
+
 - `position = dodge` places bars directly beside one another. This makes it easier to compare individual values.
 
 ```{r Interaction between cut and clarity - position dodge}
@@ -247,17 +249,31 @@ ggplot(data = mpg) +
   geom_point(mapping = aes(x = displ, y = hwy))
 ```
 
+You can see the overlaid point by applying transparency.
+
+```{r Displpacement vs mileage with transparency}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy), alpha = 0.2)
+```
+
 This is due to the values of `hwy` and `disp` are rounded and appear on a grid.
 
 You can avoid overplotting by introducing some random noise to point's positions. This is done by using the `position = jitter` adjustment.
 
 ```{r Displpacement vs mileage with jitter}
 ggplot(data = mpg) +
-  geom_point(mapping = aes(x = displ, y = hwy),
-             position = 'jitter')
+  geom_point(mapping = aes(x = displ, y = hwy), color = 'lightskyblue',
+             position = 'jitter') + 
+  geom_point(mapping = aes(x = displ, y = hwy), alpha = 0.2)
 ```
 
 You can see much more points now. To simplify jittering operation, ggplot2 includes a shortcut for `geom_point(position = 'jitter'): geom_jitter()`
+
+```{r Displpacement vs mileage with geom_jitter}
+ggplot(data = mpg) +
+  geom_jitter(mapping = aes(x = displ, y = hwy))
+```
+
 
 More information about a position adjustment is available in the help pages:
 `?position_dodge`, `?position_fill`, `?position_identity`, `?position_jitter`, `?position_stack`.
@@ -271,7 +287,7 @@ The `coord_flip()` function switches x and y axes. This is useful if you want th
 
 ```{r Flipping axes for a box plot}
 
-# Default behavior
+# Default behavior - overlapped labels
 ggplot(data = mpg, mapping = aes(x = manufacturer, y = hwy)) +
   geom_boxplot()
 
@@ -281,14 +297,11 @@ ggplot(data = mpg, mapping = aes(x = manufacturer, y = hwy)) +
   coord_flip()
 ```
 
-
-
 ## Setting axis limits
 
-The second case when tweaking a coordinate system is necessary is setting limits for an axis.
+The second case when tweaking a coordinate system is necessary is setting limits for an axis. The `coord_cartesian()` and `coord_flip()` coordinate functions have `xlim` and `ylim` arguments to control the axis range.
 
 ```{r Setting axis limits}
-
 # Default behavior
 ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
   geom_point()
@@ -296,8 +309,10 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
 # Zooming-in on a range
 ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
   geom_point() + 
-  coord_cartesian(xlim = c(15, 25), ylim = c(15, 30))
+  coord_cartesian(xlim = c(15, 25), ylim = c(20, 30))
 ```
+
+You can learn about the available coordinate systems in the [R4DS](http://r4ds.had.co.nz/data-visualisation.html#coordinate-systems) book. A cheat sheet for them is [here](http://r4ds.had.co.nz/images/visualization-coordinate-systems.png).
 
 
 # Exercise - putting it all together
@@ -306,10 +321,53 @@ Compare distribution of diamond prices for each clarity class. Try to recreate t
 
 ![Histogram of diamond prices](pics/diamond_boxplot.png)
 
-The dashed line is median price for all diamonds.
+The dashed line is the median price for all diamonds. Note the range for the `price` axis.
 
 ```{r Exercise - boxplots for diamond prices}
 # Your code here
-
+ggplot(data = diamonds) +
+  geom_boxplot(mapping = aes(x = cut, y = price, fill = cut)) +
+  geom_hline(mapping = aes(yintercept = median(price)),
+             color = 'blue', lty='dashed') + 
+  coord_flip(ylim = c(0, 25000))
+ggsave('pics/diamond_boxplot.png')
 ```
 
+# The layered grammar of graphics
+
+In this tutorial, you've learned the most important parts of the grammar of graphics - a formal system for building plots. This approach can be used to compose *any* plot as a combination of a *dataset*, a *geom*, a set of *mappings*, a *stat*, a *scale*, a *coordinate system* and a *faceting schema*: 
+
+```r
+ggplot(data = <DATA>) +
+  <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>,
+                  stat = <STAT>,
+                  position = <POSITION>)
+  ) +
+  <SCALE_FUNCTION> +
+  <COORDINATE_FUNCTION> +
+  <FACET_FUCTION>
+```
+
+There are sensible defaults, so you rarely need to include all parts and can usually proceed just with the bare minimum of a dataset, a geom and a set of mappings.
+
+To review how grammar of graphics works, consider how a basic plot is constructed starting with a dataset.
+
+First, the *dataset* is loaded and a *statistical transformation* is applied. This transformation is required to compute the information about data you want to plot (e.g. frequencies).
+
+![Computing statistics](http://r4ds.had.co.nz/images/visualization-grammar-1.png)
+
+Next, you choose a *geometric object* to represent each observation in the transformed data. You can then *map the aesthetic properties* of the geoms to variables in the data. The values of each variable is mapped to the levels of an aesthetic. A *scale* function is used to control the details of how mapping is done.
+
+![Mapping aesthetics](http://r4ds.had.co.nz/images/visualization-grammar-2.png)
+
+You can select a coordinate system to place the geoms into. By default, a cartesian coorinate system is selected.
+
+![Selecting the coordinate system](http://r4ds.had.co.nz/images/visualization-grammar-3.png)
+
+At this point, the plot is complete. But you could further adjust the positions of the geoms within the coordinate system (a position adjustment) or split the plot into subplots (faceting). You could also add more layers to the plot by adding more geoms. Each layer can use a separate set of mappings, and even a separate dataset.
+
+# Next steps
+
+To create clear and good looking plots, you'll also need to learn some functions for plot labelling, annotation and formatting. A good introduction to them is available in the [Graphics for communication] (http://r4ds.had.co.nz/graphics-for-communication.html) chapter of the [R4DS] book.
+
+You can find an awesome cheat sheet for [data visualization in ggpplot2](https://www.rstudio.com/wp-content/uploads/2015/12/ggplot2-cheatsheet-2.0.pdf) on the RStudio website. And they have [more](https://www.rstudio.com/resources/cheatsheets/).
