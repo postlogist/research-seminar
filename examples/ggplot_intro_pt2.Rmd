@@ -325,12 +325,7 @@ The dashed line is the median price for all diamonds. Note the range for the `pr
 
 ```{r Exercise - boxplots for diamond prices}
 # Your code here
-ggplot(data = diamonds) +
-  geom_boxplot(mapping = aes(x = cut, y = price, fill = cut)) +
-  geom_hline(mapping = aes(yintercept = median(price)),
-             color = 'blue', lty='dashed') + 
-  coord_flip(ylim = c(0, 25000))
-ggsave('pics/diamond_boxplot.png')
+
 ```
 
 # The layered grammar of graphics
