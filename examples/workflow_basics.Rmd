@@ -26,7 +26,7 @@ To enable a solid workflow, follow the set of simple *rules*:
 
 4. If saving some outputs is required, put them into the project's folder.
 
-RStudio has a convenient feature called RStudio projects that helps you manage files for your project. Read about it [here]((http://r4ds.had.co.nz/workflow-projects.html#rstudio-projects).
+RStudio has a convenient feature called RStudio projects that helps you manage files for your project. Read about it [here](http://r4ds.had.co.nz/workflow-projects.html#rstudio-projects).
 
 
 # The working directory
@@ -90,12 +90,15 @@ hotdogs[[1]] # Use [[]] for tibbles and [] for a regular data.frame
 ```
 
 ```{r Subsetting a vector}
-
+# Subsetting a vector
 x <- 1:10
 x
 x[2] #extracting a single element
+
 x[2:3] #subset, contiguous elements
+
 x[c(1,2,4,1)] #subset, non-contiguous elements
+
 x[x > 5 & x < 10] # by condition
 
 ```
@@ -104,19 +107,20 @@ x[x > 5 & x < 10] # by condition
 ```{r Computing with vectors}
 #### Computing with vectors
 x
-mean(x) #all data in a vector is processed at once
+mean(x) # all data in a vector is processed at once
 
-y <- x * 2 #Vectorized operation
+y <- x * 2 # Vectorized operation
 y
 
 x * y
 
 #### Missing data
-y[2] <- NA #Missing value
+
+y[2] <- NA # Missing value
 y
 
 y * 2 
-mean(y) #result is unknown
-mean(y, na.rm=T) #remove NA's
+mean(y) # result is unknown
+mean(y, na.rm=T) # remove NA's
 
 ```
