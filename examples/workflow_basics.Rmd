@@ -1,0 +1,122 @@
+---
+title: "Workflow Basics"
+author: "Gleb V. Zakhodyakin"
+date: '27.09.2016'
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# The big picture
+A typical data analysis project includes the following steps:
+
+![Workflow](http://r4ds.had.co.nz/diagrams/data-science-explore.png)
+
+R and RStudio help make your analysis *reproducible*. This means that each step you take to get the results from the raw data is recorded in a script of Rmarkdown file. You can always return, make changes and reiterate.
+
+To enable a solid workflow, follow the set of simple *rules*:
+
+1. Create a separate folder for each new data analysis project.
+
+2. Keep all data files there (you can structure your project using subfolders).
+
+3. Keep scripts (RMarkdown files) there. Put all the steps required to get the results in the script. The best way to check if the analysis runs as intended is to *knit* your file to html/doc/html notebook.
+
+4. If saving some outputs is required, put them into the project's folder.
+
+RStudio has a convenient feature called RStudio projects that helps you manage files for your project. Read about it [here]((http://r4ds.had.co.nz/workflow-projects.html#rstudio-projects).
+
+
+# The working directory
+
+R has a notion of the *working directory*. This is where R looks for files when you ask it to load them by default. You can find out the current working directory in RStudio by looking to the top of the console:
+
+![See working directory](pics/see_working_directory.png)
+
+In R code the working directory can be printed out by the `getwd()` function:
+
+```{r Getting working directory}
+getwd()
+```
+
+In RStudio the working directory for Rmarkdown files is always the directory containing the script itself. You can change it, but when knitting an output file, it will reset to the default.
+
+For plain R scripts, the working directory can be changed using the `setwd()` function. You are advised to always set the working directory to the folder containing the script file. 
+The menu in RStudio holds a convenient shortcut for this:
+
+![Set working directory in RStudio](pics/set_working_directory.png)
+
+
+# Reading data
+
+R can read many data formats. It has some built-in abilities, but most of the formats come from additional packages. For example, you'll need to install and to load the `readxl` package to be able to read data from excel files.
+
+```{r Read data from an Excel file }
+library(readxl)
+hotdogs <- read_excel('data/hotdogs.xlsx')
+```
+
+# Data structures
+
+Vectors - arrays of values of the same data type
+
+```{r Creating a vector}
+
+# By concatenation:
+x <- c(1, 2, -3, 4, 5)
+x
+
+```
+
+```{r Other ways to create a vector}
+
+# Sequence
+1:10
+
+# Controlling step size
+seq(10, 1, -2)
+
+# Repeating a value
+rep('a', 5)
+
+# Using a function
+set.seed(1)
+runif(5)
+
+# Extracting a column from a data frame
+hotdogs[[1]] # Use [[]] for tibbles and [] for a regular data.frame
+```
+
+```{r Subsetting a vector}
+
+x <- 1:10
+x
+x[2] #extracting a single element
+x[2:3] #subset, contiguous elements
+x[c(1,2,4,1)] #subset, non-contiguous elements
+x[x > 5 & x < 10] # by condition
+
+```
+
+
+```{r Computing with vectors}
+#### Computing with vectors
+x
+mean(x) #all data in a vector is processed at once
+
+y <- x * 2 #Vectorized operation
+y
+
+x * y
+
+#### Missing data
+y[2] <- NA #Missing value
+y
+
+y * 2 
+mean(y) #result is unknown
+mean(y, na.rm=T) #remove NA's
+
+```
