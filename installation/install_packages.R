@@ -25,6 +25,7 @@ install.packages('tibble') # Next generation data frame
 install.packages('vtreat') # Data preparation
 install.packages('modelr') # Helper functions to integrate modeling into tidyverse
 install.packages('purrr') # Functional programming
+install.packages('tidyverse') # All packages from tidyverse
 
 ## Graphics
 install.packages('ggplot2') #Graphics
