@@ -17,7 +17,7 @@ You may find helpful the chapter on [graphics for communication](http://r4ds.had
 
 ## Instructions on how to submit your solution
 
-1. Download this Rmarkdown file to your computer. Note, that it requires a picture file - `eoq.png` to reside in the `pics` subfolder.
+1. Download this Rmarkdown file to your computer. Note, that it requires a picture file - `eoq.png` to reside next to it.
 
 2. Put your code producing the plot in the following code chunk. 
 
