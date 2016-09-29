@@ -13,7 +13,7 @@ Economic Order Quantity is a famous model developed for inventory management abo
 
 You may find helpful the chapter on [graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html) in R for Data Science book, as well as [this advice](http://stackoverflow.com/questions/18060116/adding-legend-to-ggplot-when-lines-were-added-manually) on how to add lines to a legend on Stack Overflow.
 
-![Economic Order Quantity plot](pics/eoq.png)
+![Economic Order Quantity plot](eoq.png)
 
 ## Instructions on how to submit your solution
 
