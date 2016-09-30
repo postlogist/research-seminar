@@ -44,7 +44,6 @@ For use in this assignment, a subset of the original data was selected. It is av
 - `Walc` - weekend alcohol consumption (same as `freetime`) 
 - `health` - current health status (ordered: from `1 - very bad` to `5 - very good`) 
 - `absences` - number of school absences (numeric: from `0` to `93`) 
-
 - `G1` - first period grade (numeric: from `0` to `20`) 
 - `G2` - second period grade (same as `G1`) 
 - `G3` - final grade (same as `G1`) 
