@@ -1,0 +1,114 @@
+---
+title: "Data Transformation"
+author: "Gleb V. Zakhodyakin"
+date: '04.10.2016'
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+![Workflow](http://r4ds.had.co.nz/diagrams/data-science-explore.png)
+
+You rarely get the data in exactly the same form you need. Often you'll need to create some new variables or summaries, or just to filter out some not needed data. Operations like these are called *data transformation*. 
+
+In this tutorial you'll learn how to use the data transformation facilities available in the `dplyr` package.
+
+# Prerequisites
+
+```{r Load libraries}
+suppressMessages(library(dplyr)) # the main package for data transformation
+library(nycflights13) # will use built-in data for demonstration
+library(ggplot2)
+```
+
+The `nycflights13` package provides the `flights` dataset containing flights departed from New York City in 2013. The documentation for data is available in `?flights`.
+
+```{r Explore the dataset}
+?flights
+flights
+```
+
+# Dplyr basics
+
+The five key dplyr functions are:
+
+- Pick observations by their values (`filter()`).
+- Reorder the rows (`arrange()`).
+- Pick variables by their names (`select()`).
+- Create new variables with functions of existing variables (`mutate()`).
+- Collapse many values down to a single summary (`summarise()`).
+
+These can all be used in conjunction with `group_by()` which changes the scope of each function from operating on the entire dataset to operating on it group-by-group. 
+
+These six functions provide the *verbs* for a language of data manipulation.
+
+All verbs work similarly:
+
+- The first argument is a data frame.
+- The subsequent arguments describe what to do with the data frame, using the variable names (without quotes).
+- The result is a new data frame.
+
+Together these properties make it easy to chain together multiple simple steps to achieve a complex result.
+
+# Filter rows with `filter()`
+
+The `filter()` function allows you to subset observations based on their values. The first argument is the name of the data frame. The subsequent arguments are the expressions that are checked to filter the data frame. 
+You can save the filtered dataset in a variable by using the assignment operator: `<-`.
+
+```{r Filter flights on January, 1st operated by American Airlines  }
+(jan1_aa <- filter(flights, month == 1, day == 1, carrier == 'AA'))
+```
+
+## Comparisons
+
+R provides the usual comparison operators, like `>`, `<=`, `!=` (not equal), `==` equal.
+
+Take care when comparing floating point numbers. Computer stores an approximate value for them and comparisons may not work as expected. Use `near()` function to compare floating point numbers instead.
+
+```{r Comparison of real numbers}
+
+sqrt(2)^2 #result is rounded for printing
+# Comparison of floating point numbers may be misleading
+sqrt(2)^2 == 2
+# Use this instead
+near(sqrt(2)^2, 2)
+```
+
+Multiple arguments for `filter()` are combined with `and`. Every expression must be true in order for a row to be included in the output.
+You can also combine the filtering expressions yourself by using boolean operators:
+- `&` is and
+- `|` is or
+- `!` is not.
+
+![Boolean operators](http://r4ds.had.co.nz/diagrams/transform-logical.png)
+
+You need to write the full comparison expressions when combining them. Use brackets to group expressions, if necessary.
+
+```{r Flights in November and December}
+filter(flights, month == 11 | month == 12, flight == 857)
+```
+
+Use `%in%` predicate to check a value against a list of alternatives (actually, a vector of alternatives):
+
+```{r Flights in November and December, via in}
+filter(flights, month %in% c(11, 12), flight == 857)
+```
+
+There's also a `between()` helper function to check against a range of values.
+
+## Exercises
+Find all flights that
+
+- Had an arrival delay of two or more hours
+- Flew to Houston (IAH or HOU)
+- Were operated by United, American, or Delta
+- Departed in summer (July, August, and September)
+- Arrived more than two hours late, but didn’t leave late
+- Were delayed by at least an hour, but made up over 30 minutes in flight
+- Departed between midnight and 6am (inclusive)
+- How many flights have a missing dep_time? 
+
