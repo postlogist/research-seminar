@@ -45,6 +45,17 @@ install.packages('ggmap') #Spatial Visualization with ggplot2
 install.packages('ggvis') #Interactive plots
 install.packages('leaflet') #mapping
 #also installing the dependency ‘raster’
+install.packages("nhstplot") # Visualization of hypothesis testing
+install.packages("dygraphs") #interactive time series visualization
+install.packages("ZRA") # Combines a forecast of a time series, using the function forecast(), with the dynamic plots from dygraphs
+install.packages("ggseas") # on-the-fly time series decomposition using ggplot2
+install.packages("directlabels") # legend inside the plot canvas
+install.packages("osmar") # OpenStreetMap data into R
+install.packages("networkD3") # D3 networks
+# also installing the dependencies ‘pkgmaker’, ‘registry’, ‘rngtools’,
+# ‘gridBase’, ‘doParallel’, ‘NMF’, ‘irlba’, ‘igraph’
+install.packages('DiagrammeR') #graphs
+# also installing the dependencies ‘influenceR’, ‘visNetwork’
 
 # see http://ggplot2-exts.github.io/
 install.packages('ggrepel') #Repel overlapping labels on a ggplot
@@ -54,6 +65,10 @@ install.packages('ggalt') # More coordinate systems and geoms
 install.packages('geomnet') #network visualization
 #also installing the dependencies ‘sna’, ‘network’
 install.packages('ggfortify') #Helper functions to plot statistical models
+install.packages("wesanderson") # color palettes
+install.packages("ggthemes") # themes for ggplot
+#install.packages("gganimate") # animated ggplot charts
+#install.packages("ggraph") # graphs
 
 ## Time Series
 install.packages("lubridate") # date processing
@@ -65,7 +80,11 @@ install.packages("forecast") #Time Series Modeling & Forecasting
 install.packages('fpp') #Examples from Forecasting Principes and Practice book
 # also installing the dependencies ‘fma’, ‘expsmooth’
 #install.packages('tslm') #Using lm for time series
-
+install.packages("stR") # Multi-seasonal time series decomposition
+install.packages("seasonal") # X13-ARIMA-SEATS, also installing the dependency ‘x13binary’
+install.packages("stlplus") # Enhanced STL decomposition
+install.packages("vars") #also installing the dependency ‘strucchange’
+install.packages("changepoint")
 
 ## Output
 install.packages(c('knitr', 'yaml', 'htmltools', 'caTools', 'bitops', 'rmarkdown')) #R Markdown
@@ -74,7 +93,6 @@ install.packages('pander') #An R Pandoc Writer
 install.packages('xtable') #Export tables to LaTeX or HTML
 install.packages('htmlwidgets') #HTML widgets output
 install.packages('webshot') #make snapshots of HTML widgets
-
 
 
 ## Modeling
