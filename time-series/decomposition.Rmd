@@ -316,7 +316,7 @@ autoplot(elecequip_sd, ts.colour='lightskyblue',
 
 ```{r STL-декомпозиция мультипликативного ряда 1}
 # Попытка #1 - разрешаем сезонному компоненту постепенно меняться
-elec_sd <- stl(elec, s.window = 24)
+elec_sd <- stl(elec, s.window = 7)
 
 autoplot(elec_sd, ts.colour='lightskyblue',
      main = 'STL декомпозиция мультипликативного ряда')
@@ -380,7 +380,7 @@ $$ A_t = y_t / \hat{S_t} = T_t \cdot E_t.$$
 В R сезонная корректировка реализована в нескольких пакетах. Например, можно использовать функцию `forecast::seasadj()`. 
 
 ```{r Сезонная корректировка ряда}
-ausbeer_sd <- stl(ausbeer, s.window = 12, t.window = 24)
+ausbeer_sd <- stl(ausbeer, s.window = 7, t.window = 21)
 ausbeer_sas <- seasadj(ausbeer_sd)
 
 autoplot(cbind('Оригинал' = ausbeer,
