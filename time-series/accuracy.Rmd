@@ -121,7 +121,7 @@ beer_sn
 
 Загрузка данных из ЕАЭСД (sophist) - Ввод в действие жилых домов, млн.кв.метров (CONSTR_Y_NAT)
 
-```{r Данные по импорту}
+```{r Данные по строительству}
 
 constr <- sophisthse('CONSTR_Y_NAT') # В таблице один столбец, сразу создался одномерный временной ряд ts
 
@@ -131,10 +131,10 @@ constr_label <- 'Ежегодный ввод в действие жилых до
 constr_unit <- 'млн.кв.м'
 
 # Оставляем данные с 2005 года
-import <- window(constr, start = 2005)
+constr <- window(constr, start = 2005)
 
 # Визуализация
-autoplot(import, ts.colour = 'lightskyblue') +
+autoplot(constr, ts.colour = 'lightskyblue') +
   labs(title = constr_label, y = constr_unit)
 
 ```
