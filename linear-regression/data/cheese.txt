@@ -14,7 +14,7 @@ Variable Names:
 
 The Data:
 
-Case	taste	Acetic	H2S	Lactic
+Case	Taste	Acetic	H2S	Lactic
 1	12.3	4.543	3.135	0.86
 2	20.9	5.159	5.043	1.53
 3	39	5.366	5.438	1.57
