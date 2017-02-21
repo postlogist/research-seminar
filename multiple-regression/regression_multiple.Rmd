@@ -1,0 +1,709 @@
+---
+title: "Multiple Regression"
+author: "Gleb Zakhodyakin, postlogist@gmail.com"
+date: "17.11.2015"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Multiple Regression Model
+
+ **Multiple regression** is a model to predict to predict a continuous **response** variable (also called a dependent, criterion, or outcome variable) from multiple **predictor** variables (also called independent or explanatory variables).
+
+![Regression](figures/regression.png)
+
+It is a more general form of the linear model:
+
+$$ y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_k x_k + \varepsilon $$
+
+In this equation, $y$ is the variable to be predicted, and $x_1, x_2, \ldots, x_k$ are the $k$ predictor variables. Each of the predictors must be numerical. There is a workaround for categorical predictors.
+
+The **slope coefficients** $\beta_1, \beta_2, \ldots, \beta_k$ measure the effect of each predictor after taking into account of the effect of all other predictors in the model. These coefficients measure the **marginal effects** of the predictor variables, i.e. the $\beta_1$ coefficient shows the change in $y$ for an unit change in $x_1$ holding $x_2, x_3, \ldots, x_k$ constant.
+
+The $\beta_0$ coefficient is the **intercept** - the value of $y$ when all predictors are 0.
+
+As for simple linear regression, following properties of the **error term** $\varepsilon$ are assumed:
+
+ - the errors have mean zero;
+ 
+ - the errors are uncorrelated with each other;
+ 
+ - the errors are uncorrelated with each predictor $x_j$.
+ 
+If either inference or interval forecast are of interest, the normal distribution of residuals with constant variance is required.
+
+Estimation of the coefficients is based on the ordinary least squares method, as with simple linear regression:
+$$ y = b_0 + b_1 x_1 + b_2 x_2 + \ldots + b_k x_k + e $$
+
+$$ \sum_{i=1}^N e_i^2 = \sum_{i=1}^N(y_i - b_0 - b_1 x_{i,1} - \ldots - b_k x_{i,k})^2. $$
+
+Using the ordinary least squares method for multiple regression involves matrix computation and is always done using a computer package.
+
+Finding the best estimates of the coefficients is often called **fitting** the model to data.
+
+In R, the built-in `lm()` function is used for fitting multiple regression models.
+
+## Example
+
+In this example we will build a multiple regression model for prediction of car mileage (miles per gallon) based on its properties.
+
+```{r Load packages}
+library(ggplot2) #data visualization
+library(car) #useful functions for regression modeling and diagnostics
+library(reshape2) #data transformation
+```
+
+### Exploring data
+
+```{r Load data}
+url <- 'http://rawgit.com/postlogist/course_dars/master/datasets/cars.csv'
+#url <- '../datasets/cars.csv'
+cars <- read.csv2(url, skip=25, stringsAsFactors = F) # Text variables won't be converted to factors automatically. We want to control this conversion manually.
+str(cars)
+```
+
+There are a few missing values in the dataset, that will be removed.
+
+```{r Clean NAs}
+summary(cars[-c(1:5)])
+cars <- na.omit(cars)
+nrow(cars) #5 rows are removed
+```
+
+Note that deletion of NA's has changed the row numbers. Because of this, the row numbers do not correspond to row names anymore. To fix this, adjusting the row names is advised:
+
+```{r Adjust row names}
+row.names(cars) <- 1:nrow(cars)
+```
+
+Right now, the first 5 columns in the data frame contain categorical text variables, which can't be used for correlation and regression analysis directly. 
+
+```{r Correlation matrix}
+#The correlation matrix
+r.cars <- round(cor(cars[-(1:5)]), 2)
+r.cars['mpg', ]
+```
+
+We have extracted the row of the correlation matrix containing correlation coefficients for car's properties and mpg. The larger and heavier cars tend to have lower mpg (the correlation coefficients are negative). 
+
+The graphical view on correlations can be obtained with scatterplot matrix.
+
+```{r Scatterplot matrix, dev='svg'}
+scatterplotMatrix(cars[-(1:5)], smoother = F)
+```
+
+For datasets with many variables the scatterplot matrix is impractical. To plot only pairs containing `mpg`, the `ggplot()/qplot()` functions can be used. But data needs to be transformed into a tall form. This time, we'll use the `melt()` function (package `reshape2`) for this.
+
+```{r Reshape data into a tall form}
+carstall <- melt(cars, id.vars = c(1:5, 14), variable.name = 'property')
+subset(carstall, manufact_model=='Acura Integra')[-(1:2)]
+```
+
+
+```{r Scatterplots for all numeric variables and mpg}
+ggplot(aes(x = value, y = mpg), data = carstall) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~ property, scale = 'free') +
+  stat_smooth(method = lm) +
+  geom_rug() +
+  labs(x='Property')
+```
+
+### A simple linear regression model
+Based on correlation matrix and scatterplots, the best predictor for `mpg` is car's weight (`curb_wgt`).
+Let's build a simple linear regression model with this variable as a predictor.
+
+```{r Simple linear regression with curb_wgt}
+m.wgt <- lm(mpg ~ curb_wgt, data=cars)
+summary(m.wgt)
+```
+
+Both t- and F-tests reject the Null hypothesis about $\beta_{curb\_wgt}=0$, so the relationship we've found does exist in population. Each additional unit of `curb_wgt` decreases the car's mileage by `r round(coef(m.wgt)[2], 1)`.
+
+```{r Plot for a model with curb_wgt}
+qplot(curb_wgt, mpg, data=cars) +
+  geom_smooth(method=lm)
+```
+
+The model has explained `r round(summary(m.wgt)$r.squared * 100)` percent of variation in mpg. This result can be improved by including other predictors into a model.
+
+### A multiple regression model with two predictors
+
+The question is, what's the next predictor to include into a model. In this example we'll take approach based on exploring correlations between remaining predictors (other than `curb_wgt`) with residuals from our first model. The principle is to find the next best predictor, that can explain what the first one didn't.
+
+```{r Exploring residuals}
+res1 <- data.frame(cars[-(1:5)], residuals=residuals(m.wgt))
+round(cor(res1), 3)[,'residuals']
+```
+
+The variable with largest correlation with residuals of the first model is `horsepow` - the engine's horse power.
+Let's build a second model including both of these predictors.
+
+```{r A two-variable regression model with curb_wgt and horsepow}
+m.wgtpow <- lm(mpg ~ curb_wgt + horsepow, data=cars)
+summary(m.wgtpow)
+```
+
+The significance testing for a multiple regression follows the same principle. We can observe that the F-test rejects the hypothesis about all slope coefficients being zero in population. The  t-tests for individual coefficients also reject the Null's about each coefficient being zero in population.
+
+The $R^2$ has improved a little bit to `r round(summary(m.wgtpow)$r.squared * 100)` percent of the variation in `mpg`.
+
+To predict using a second model, a data frame containing both `curb_wgt` and `horsepow` is required.
+
+```{r Interval prediction using a two-variable model}
+# Prediction of mileage for a car with curb weight 4 and horse power 200
+cars.new <- data.frame(curb_wgt=4, horsepow=200)
+prediction2 <- predict(m.wgtpow, newdata = cars.new, 
+                       interval = 'prediction', level=0.9)
+prediction2 <- round(prediction2, 1)
+prediction2
+```
+
+A car with curb weight of 4 and 200 HP is expected to have mileage of `r prediction2[1]`. The 90% prediction interval for mileage of such a car is [`r prediction2[2]`, `r prediction2[3]`].
+
+### A multiple regression model with categorical predictors
+
+Let's return to a simple regression. There are actually two types of car in the dataset - automobiles and trucks. The fuel economy should depend on the car type heavily.
+
+```{r Plot horsepow vs mpg split by car type}
+qplot(horsepow, mpg, colour = type, data = cars) +
+  stat_smooth(method = lm, se = F)
+```
+
+Categorical predictors can be included in a regression model by using dummy variables. A **dummy variable** takes values 0 or 1 for specific categories. At this point, we have two categories - Automobiles and Trucks. Let's build a model with a dummy variable 'truck` that takes value of 1 for Trucks.
+
+```{r Regression with a dummy variable}
+carsdummy <- cars
+carsdummy$truck <- ifelse(carsdummy$type=='Truck', 1, 0)
+
+m.dummy <- lm(mpg ~ horsepow + truck, data = carsdummy)
+
+summary(m.dummy)
+```
+
+The model equation is:
+$$\widehat{mpg} = 33.8 - 0.046 \cdot horsepow - 5.5 \cdot truck$$
+
+This means, that when `truck` is 1, the `mpg` is 5.5 miles/gallon less, than for an automobile (`truck=0`). So the *Intercept* ($b_0$) for trucks is 5.5 lower than for automobiles. The dummy variable captures the difference between the **base**, or **reference** category - automobiles and the trucks.
+
+R can handle categorical predictors automatically, if they are converted to factors. The base (reference) category corresponds to the first factor level. It's corresponding dummy variable is not included into a model.
+
+
+
+```{r Regression with a factor}
+cars$type <- factor(cars$type, levels=c('Automobile', 'Truck'))
+
+m.factor <- lm(mpg ~ horsepow + type, data = cars)
+summary(m.factor)
+```
+
+The results are identical to the model with manually created dummy variable.
+
+### A multiple regression model with categorical predictors and interactions
+
+Let's consider relationship of car mileage to another predictor variable - `curb_wgt`.
+
+```{r Plot weight vs mpg split by car type}
+qplot(curb_wgt, mpg, colour = type, data = cars) +
+  stat_smooth(method = lm, se = F)
+```
+
+The plot shows that the regression lines for two subgroups are not only shifted, but are also not parallel. This means that the equations for the regression lines for two subgroups have both different intercept coefficients and slope coefficients.
+
+The change of slope of one variable dependent on the value of another variable is called an **interaction**.
+
+To model an interaction in R, the `var1:var2` syntax is used.
+
+```{r Regression with categorical predictor and interaction}
+m.interact <- lm(mpg ~ curb_wgt + type + curb_wgt:type, data=cars)
+
+summary(m.interact) #both the coefficient for truck dummy and the coefficient for interaction term are significant
+round(coef(m.interact), 1)
+```
+
+The interaction means that a product of two variables is included into a model: 
+$$\widehat{mpg} = b_0 + b_1 \cdot curb\_wgt + b_2 \cdot (type=Truck) + 
+    b_3 \cdot curb\_wgt \cdot (type=Truck)$$
+
+Equations:
+
+When `type = Automobile`: 
+$$\widehat{mpg} = 44.4 - 6 \cdot curb\_wgt $$
+
+When `type = Truck`: 
+$$\widehat{mpg} = (44.4 - 12.0) -6.0 \cdot curb\_wgt + 2.8 \cdot curb\_wgt $$
+
+or 
+
+$$ \widehat{mpg} = 32.4 - 3.2 \cdot curb\_wgt$$
+
+Both the Intercept and the slope for `curb_wgt` are different for trucks.
+
+### Categorical predictors with more than two levels in R
+
+Let's add another factor variable with 3 levels - the country of origin. We'll use the Japan as a base category. When the variable will be included into a model, it will explain the difference of european and american cars with japanese ones.
+
+```{r Handling of factors in R}
+cars$country <- factor(cars$country, levels=c('Japan', 'Europe', 'USA'))
+
+m.country <- lm(mpg ~ horsepow + type + country, data = cars)
+summary(m.country)
+```
+
+
+
+### Multicollinearity
+
+Let's reconsider the correlation matrix for the cars dataset. 
+
+```{r Correlation Matrix Revisited}
+r.cars[,-9]
+```
+
+Note that most of the car characteristics have high correlation coefficients with each other. For instance, length and wheel base have a high correlation coefficient of `r r.cars['length', 'wheelbas']`. This is not surprisingly:
+
+![Wheel base](https://upload.wikimedia.org/wikipedia/commons/5/52/Wheelbase_and_Track.png)
+
+
+**Multicollinearity** means that predictors in a multiple regression model are highly intercorrelated. That is, a linear relationship exists between two or more independent variables.
+
+Let's add one more predictor - `fuel_cap` to the regression with `horsepow` and `curb_wgt`. By itself, this is a good predictor for `mpg`, since it has a high r. But this variable has also a very high r with `curb_wgt`.
+
+```{r A model with curb_wgt, horsepow, fuel_cap}
+m.wgtpowfuel <- lm(mpg ~ curb_wgt + horsepow + fuel_cap, data=cars)
+summary(m.wgtpowfuel)
+summary(m.wgtpow)
+```
+
+This is still a good model. But note the standard error for the `curb_wgt`'s slope coefficient. It has become larger twice as much.  This means that uncertainty in true value for the slope coefficient has increased. This is a negative effect of multicollinearity.
+
+In addition to increased uncertainty associated with slope coefficients, the multicollinearity makes interpretation of individual slope coefficients more difficult. The common interpretation: $b_j$ is a change in $y$ for a unit change in $x_j$ all other $x_k, k\ne j$ makes no sense, since $x_j$ cannot be changed in isolation anymore. 
+
+Actually, the slope coefficients are correlated too. This can be measured by the *variance-covariance matrix* which is a by-product of OLS method. This matrix contains variances (squared standard error) for individual coefficients on its diagonal and covariances for pairs of coefficients in the remaining cells.
+
+```{r Variance-covariance matrix}
+round(vcov(m.wgtpowfuel), 2)
+```
+
+If the coefficients have large covariance, then the standard error for each such coefficient will increase. The value of the coefficient itself will change when a second variable is removed from the model. In extreme cases this may even lead to changing the direction of the relationship. For instance, price the may become a positive coefficient in an equation for forecasting demand, which is unlikely true.
+
+To measure the strength of multicollinearity, *variance inflation factors* are used:
+
+$$ VIF_j = \frac{1}{1-R^2_j}, j=1 \ldots k $$
+
+Here, $R^2_j$ is the coefficient of determination from the regression of the predictor $j$ on the remaining $k-1$ predictors. If the model has only $k=2$ predictors, this is equal to the squared sample correlation coefficient $r$ for these two predictors.
+
+If the $j$-th predictor $x_j$ is not related to the remaining $x$-es, then $R^2_j=0$ and $VIF_j=1$. If there is a relationship, $VIF_j > 1$. 
+
+A VIF near 1 suggests that multicollinearity is not a problem for that predictor. Its estimated slope coefficient and associated standard error and t-value won't change much as the other predictors are added to or deleted from the regression equation. 
+
+A VIF much greater than 1 indicates that the estimated slope coefficient for that variable is *unstable*. Its value and standard erro may change considerably when other predictors are entered or excluded from the model. A large VIF means essentially, that there is redundand infromation among the predictor variables. The information being conveyed by a variable with large VIF is already being explained by the other predictor variables included in the model.
+
+$VIF > 4$ may indicate a multicollinearity problem.
+
+To compute VIFs in R, the `vif()` function is used:
+
+```{r Compute VIFs}
+round(vif(m.wgtpowfuel), 1)
+```
+
+The multicollinearity is a problem for statistical inference and interpreation of slope coefficients. However, it does not interfere with the prediction task.
+
+### Strict multicollinearity
+
+The strict multicollinearity occurs when variables with a perfect linear relationship are included into a model. In this case, the regression  coefficients can't be estimated at all.
+
+```{r Strictly multicollinear model}
+cars.multi <- cars
+cars.multi$width.cm <- cars.multi$width * 2.54
+
+m.width.cm <- lm(mpg ~ width.cm, data = cars.multi)
+coef(m.width.cm) #no problem
+
+m.width.both <- lm(mpg ~ width + width.cm, data = cars.multi)
+coef(m.width.both) #one variable is automatically excluded
+
+```
+
+### A dummy trap
+A specific case of strict multicollinearity is the **dummy trap**. 
+
+Let's consider the `cars.dummy` dataset, where we have introduced a dummy variable `truck` that takes value 1 for trucks. We could also introduce another dummy variable - `automobile` which would take the value 1 for automobiles.
+
+But it is impossible to include both of the variables into a model. This is because these two dummy variables are linearly related. We know that a car is either a truck or an automobile. Because of this the following equality holds: 
+
+$$automobile + truck = 1$$
+
+
+```{r A dummy trap}
+carsdummy$automobile <- ifelse(carsdummy$type=='Automobile', 1, 0)
+m.dummy2 <- lm(mpg ~ horsepow + truck + automobile, data = carsdummy)
+coef(m.dummy2) #Only one dummy variable is included
+```
+
+Because of such strict linear dependence, **the number of dummy variables to be included in the model should be always one less the number of groups they represent**. R handles this automatically when groups are represented by factor levels.
+
+
+### The full model
+
+Let's consider the full model, including all the numerical predictors and factors for car type and country of origin.
+
+```{r Full model}
+m.full <- lm(mpg ~ ., data = cars[-c(1:3)])
+summary(m.full)
+round(vif(m.full), 1)
+```
+
+Predictors have large VIFs. Some of the slope coefficients are insignificant due to large standard errors. 
+
+
+### Criteria to select the best model
+
+So far, we've used the $R^2$ to select the best model. But this approach has limitations. It can be shown, that $R^2$ is always larger for a model with more predictos, regardless of their usefullness. This means, that using $R^2$ to compare models is only possible for if models have the same number of predictors.
+
+There are many statistics that are used to select among multiple regression models:
+
+ - The Adjusted $R^2$
+ - The Akaike Information Criterion (AIC)
+ - Other Information Criteria (BIC, AICc...)
+ 
+ We'll consider the first two. Both statistics penalize the model with larger number of predictors.
+ 
+ The **adjusted $R^2$** is computed using formula:
+ 
+ $$ R^2_{adj} = 1 - (1-R^2) \cdot \frac{n-1}{n-k-1}$$
+
+For larger $k$ the fraction becomes larger, and so the unexplained variance $(1-R^2)$ is increasing and $R^2_{adj}$ is decreasing. Thus, $R^2_{adj} < R^2$ for the same model. As with $R^2$, values closer to 1 are better.
+
+The **Akaike Information Criterion (AIC)** is a statistic that depends on the residual sum of squares, but it includes a term that penalizes models with larger number of predictors: 
+
+$$ AIC = n \ln (RSS/n) + 2(k+1). $$
+
+Lower AIC values indicate a better model.
+
+### The stepwise regression
+
+The stepwise regression is a heuristic algorithm for selecting variables for the regression model. It works in a step-by-step manner. At each step the best variable to enter or leave the model is selected. For judging different option, a specific criterion is used. There are several variations of this algorithm that differ in the variable selection order and criteria being used. 
+
+The variable selection order can be one of the following: 
+
+- Backward stepwise regression
+
+- Forward stepwise regression
+
+- Stepwise stepwise regression
+
+The **backward stepwise** regression starts with a full model and eliminates the worst predictor variable at each step. 
+
+The **forward stepwise** regression works in the opposite direction: it starts with a null-model and chooses the best predictor from the available variables.
+
+The **stepwise stepwise** regression can either include or remove predictors at each step. This is useful, since adding new predictors can change the role of the remaining predictors due to correlations between those.
+
+For judging the model quality at each step, a criterion like $R^2_{adj}$ or AIC is used. 
+
+In R, there is an implementation of stepwise regression in the `MASS` package - the `stepAIC()` function. It uses AIC as a model selection criterion and can work in either direction.
+
+The simplest case is starting with a full model and working in backward direction - removing predictors one-by one. In this case you need to provide only the lm object corresponding to the full model.
+
+```{r Backward Stepwise Regression}
+library(MASS)
+
+m.backward <- stepAIC(m.full, direction="backward")
+```
+
+To use forward and stepwise selection algorithms, you need to provide both the full and the restricted model (usually the null model that doesn't include any predictors) using the `scope=` parameter.
+
+```{r Forward Stepwise Regression}
+m.null <- lm(mpg ~ 1, data = cars) #the null model
+
+m.forward <- stepAIC(m.null, 
+                     scope=list(lower=m.null, upper=m.full),
+                     direction='forward')
+```
+
+
+```{r Stepwise Stepwise Regression}
+m.stepwise <- stepAIC(m.null, 
+                      scope=list(lower=m.null, upper=m.full), 
+                      direction='both')
+```
+
+To compare models, a `mtable()` function from `memisc` package can be conveniently used. This function collects all the model coefficients, their standard errors and significance codes in one summary table.
+
+```{r Compare model coefficients}
+library(memisc)
+
+mtable(m.backward, m.forward, m.stepwise)
+```
+
+In this case, all three selection algorithms have produced the same model.
+
+```{r Summary on the best model selected by stepAIC}
+summary(m.backward)
+```
+
+### Best subsets regression
+
+The stepwise regression is a *greedy*, myopic approach that makes the best move at each step, but the result is not necessary the global optimum. Because of this, finding the best model for a given dataset is not warranted.
+
+If there are only a few predictors, an exhaustive search considering all possible combinations of up to $k$ predictors can be used. In R, the `regsubsets()` function from package `leaps` implements this approach. This function will consider all the possible regressions and return a specified number of best models for each number of predictors $k$. This number is specified with a parameter `nbest=`.
+
+```{r Best subsets regression, dev='svg'}
+# The leaps package isn't included with course software package and must be installed separately:
+#install.packages('leaps') 
+
+library(leaps)
+models <- regsubsets(mpg ~ ., nbest=2, data = cars[-c(1:3)])
+plot(models, scale="adjr2")
+```
+
+The plot above shows the predictors for 2 best models for a given number of predictors. The columns (horizontal axis) correspond to predictors, and the rows (vertical axis) correspond to differente models. The models are ranked by increasing adjusted $R^2$. If a predictor is included into a model, its cell is shaded. White cells denote the excluded predictors.
+
+
+To visualize models using less depressing colors, the `RColorBrewer` package can be used. It contains a selection of color palettes suitable for visualization of quantitative and categorical data.
+
+```{r Color palettes, fig.height=10, dev='svg'}
+
+library(RColorBrewer)
+display.brewer.all() #all palettes
+```
+
+```{r Best subsets models visualization - happier colors, dev='svg'}
+#create a color scale with 9 colors based on 'Blues' palette
+mycolors <- rev(brewer.pal(n=9, name='Blues')) 
+plot(models, scale="adjr2", col=mycolors)
+```
+
+Using best subsets regression is only feasible for small number of predictors. It can't also consider interactions automatically.
+
+### Most important factors
+
+Let's consider the best 3-predictor model as selected by `regsubsets()` function. We will use the `truck` dummy instead of `type` for the reasons explained below.
+
+```{r Best 3 predictors model}
+m.best3 <- lm(mpg ~ truck + horsepow + curb_wgt, data=carsdummy)
+round(coef(m.best3), 2)
+```
+
+The question is, what is the most important predictor for `mpg`? We can't user the magnitude of coefficients, because they depend on scale of the predictor. The range of `truck` dummy variable takes values 0 and 1. The ranges of `horsepow` and `curb_wgt` variables differ by two orders of magnitude:
+
+```{r Range of horsepow and curb_wgt}
+range(carsdummy$horsepow)
+range(carsdummy$curb_wgt)
+```
+
+Because of the different magnitude of predictors, the corresponding coefficients have a different magnitude and are not comparable.
+
+To make them comparable, we need to scale the predictors, so they all have a similar range. The popular method of scaling is standardization, or computing of **z-scores**:
+
+$$ z = \frac{x - \bar{x}}{S_x} $$
+
+Each value is replaced by its deviation from the mean measured in the number of standard deviations - the **z-score**. For instance, a score of $z=-1.5$ means that the corresponding value of $x$ is 1.5 standard deviations below the mean.
+
+This method of scaling is appropriate when the distribution of the original variable is close to normal. In this situation, after the standardization the transformed variable will have the standard normal distribution.
+
+To compute z-scores in R, the `scale()` function is used.
+
+```{r Effect of z-standardization}
+
+# Original data
+qplot(curb_wgt, data=cars, geom='density', colour=I('blue')) +
+  geom_density(aes(x=horsepow), colour='red') +
+  annotate(geom='text', x=50, y=0.4, label='curb_wgt', colour='blue') +
+  annotate(geom='text', x=50, y=0.35, label='horsepow', colour='red') +
+  labs(title='Distributions of original data',
+       x = 'Curb weight or horse power')
+
+
+# Scaled data (z-scores)
+qplot(scale(curb_wgt), data=cars, geom='density', colour=I('blue')) +
+  geom_density(aes(x=scale(horsepow)), colour='red') +
+  annotate(geom='text', x=2.5, y=0.3, label='curb_wgt', colour='blue') +
+  annotate(geom='text', x=2.5, y=0.25, label='horsepow', colour='red') +
+  labs(title='Distributions of scaled data',
+       x = 'z')
+```
+
+Let's consider the same model with scaled data (z-scores):
+
+```{r Scaled coefficients}
+
+m.best3.z <- lm(mpg ~ 
+                 scale(truck) + scale(horsepow) + scale(curb_wgt), 
+               data=carsdummy)
+round(coef(m.best3.z), 2)
+```
+
+The coefficients of a model with standardized predictors - the **standardized coefficients ** - show the relative importance of individual predictors. In this example, the unit change in z-score of `curb_wgt` leads to the largest change in `mpg`, so this predictor is the most important one. However the other two are quite close.
+
+In other cases the difference may be more pronounced.
+
+```{r Standardized coefficients for the best model selected by stepAIC}
+formula(m.backward)
+
+m.backward.z <- lm(mpg ~
+                   scale(country=='Europe') +
+                   scale(country=='USA') +
+                   scale(type=='Truck') +
+                   scale(price) +
+                   scale(engine_s) +
+                   scale(horsepow) +
+                   scale(curb_wgt) +
+                   scale(fuel_cap),
+                  data = cars)
+
+summary(m.backward.z)
+
+```
+
+### Centering and scaling variables to get meaningful coefficients
+
+Let's return to the model with two predictors: `curb_weight` and `horsepow`.
+
+```{r 2 predictor model revisited}
+summary(m.wgtpow)
+```
+
+The intercept term of a multiple regression model is an expected value of dependent variable when all the predictors are zero. In many situations this is impossible in practice. There's no car with zero weight or power.
+
+To help interpreting the Intercept, centering variables can be applied. The centering is just the substraction of an average from each observed value:
+
+$$ x_{centered} = x - \bar{x} $$
+
+After centering, the average value of a variable becomes 0. Values of a centered variable are deviations from the averag. A positive deviation means a value above average. A negative deviation - a value below average.
+
+In R, centering can be done using the same `scale()` function with parameter `scale=F`.
+
+Another issue is that a large magnitude of some predictor leads to a small coefficient value for that predictor. In this case, the scale of a predictor can be adjusted. In this example, computing a coefficient for 100 hp instead of 1 hp can simplify the interpretation of the regression equation.
+
+```{r Centering and scaling predictors}
+
+m.wgtpow.centered <- lm(mpg ~ 
+                          scale(curb_wgt, scale=F) +
+                          scale(horsepow/100, scale=F),
+                        data = cars)
+
+b.cent <- round(coef(m.wgtpow.centered), 1)
+
+summary(m.wgtpow.centered)
+
+```
+
+The coefficients have become easier to interpret:
+
+The intercept `r b.cent[1]` is the mileage of a car with an average weight (`r round(mean(cars$curb_wgt), 1)`) and power (`r round(mean(cars$horsepow))` hp).
+
+Each additional unit of weight will reduce the mileage by `r abs(round(b.cent[2], 1))` miles per gallon while holding power constant.
+
+Each additional hundred of hp will reduce the mileage by `r abs(round(b.cent[3], 1))` miles per gallon while holding curb weight constant.
+
+Holding some variable constant just means that we are considering only cars with the same value for that variable. For instance, we are comparing mileage of cars with the same power, but with different weights.
+
+
+### Regression diagnostics
+
+As usual, checking regression assumptions is required to assess the validity of the model constructed. We'll apply the standard approach based on the built-in `plot()` function.
+
+```{r Regression diagnostics using plot, dev='svg'}
+plot(m.backward, labels.id=paste(row.names(cars), cars$manufact_model))
+```
+
+
+The first plot shows a slight curvature of the relationship and the presence of outliers:
+
+```{r identify outliers}
+data.frame(cars, fit=round(fitted(m.backward)))[c(24, 80, 128), -c(1:2, 9:12)]
+```
+
+The second plot shows no deviation from normality for residuals.
+
+The third plot shows that no increase in variance (heteroscedasticity) is present.
+
+The last plot shows that there are no influential observations. The largest value for Cook's D is associated with the car #24 - Chevrolet Metro. It has a much larger mpg than our model has predicted.
+
+
+To investigate the non-linearity, the scatterplots of residual vs predicted mpg and residuals vs individual predictors can be used. Two examples using `ggplot2` are shown below
+
+```{r Plots for checking linearity}
+
+formula(m.backward)
+
+qplot(fitted(m.backward), residuals(m.backward)) + 
+  geom_smooth(colour='blue', method='loess') +
+  labs(title='Residuals vs fitted',
+       x='Predicted mpg',
+       y='Residual')
+
+qplot(cars$price, residuals(m.backward)) + 
+  geom_smooth(colour='blue', method='loess') +
+  labs(title='Residuals vs price',
+       x='Price',
+       y='Residual')
+```
+
+A quicker way to output regression diagnostics plots is by using functions in `car` package.
+
+The `residualPlots()` function plots the residuals vs individual predictors as well as residuals vs fitted values.
+
+```{r Residual plots using residualPlots, dev='svg'}
+residualPlots(m.backward)
+```
+
+In addition to plotting, a curvature test for each of the plots is computed by adding a quadratic term to the model and testing if its coefficient is zero.
+
+It is possible to select which variables to plot via parameters:
+
+The following example plots only `price` and fitted vs residuals:
+
+```{r Selected residual plots, dev='svg'}
+residualPlots(m.backward, ~price, fitted=T)
+```
+
+A non-linearity can be seen in residuals vs fitted values plot. Power transformations on the outcome or dependent variables can be attempted to fix this problem.
+
+```{r Finding the required power}
+powerTransform(m.backward)
+```
+
+The required power for transforming the dependent variable is -0.27. This is quite close to zero (log-transformation), so we can try to use log instead of power to simplify interpretation of the model equation
+
+```{r Power transforming mpg, dev='svg'}
+# Power transformation
+m.power <- lm(I(mpg^-0.27) ~ country + type + price + engine_s + 
+              horsepow + curb_wgt + fuel_cap, data=cars)
+summary(m.power)
+residualPlots(m.power)
+```
+
+
+```{r log-Transforming mpg, dev='svg'}
+# Log transformation
+m.log <- lm(log10(mpg) ~ country + type + price + engine_s + 
+              horsepow + curb_wgt + fuel_cap, data=cars)
+summary(m.log)
+residualPlots(m.log, ~ price + engine_s + horsepow + curb_wgt + fuel_cap)
+```
+
+Note that some coefficients within a model became non-significant after transformation. It is a good idea to reconsider the predictors used.
+
+```{r Finding the best model for log transformed data using stepAIC, dev='svg'}
+m.full.log <- lm(log10(mpg) ~ ., data = cars[-c(1:3)])
+m.backward.log <- stepAIC(m.full.log, direction='backward', trace = F)
+summary(m.backward.log)
+residualPlots(m.backward.log, ~ engine_s + wheelbas + curb_wgt + fuel_cap)
+```
+
+
+```{r Finding the best model for power transformed datausing stepAIC, dev='svg'}
+m.full.power <- lm(I(mpg^-0.27) ~ ., data = cars[-c(1:3)])
+m.backward.power <- stepAIC(m.full.power, direction='backward', trace = F)
+summary(m.backward.power)
+residualPlots(m.backward.power, ~ engine_s + length + curb_wgt + fuel_cap)
+```
+
+
+The model with power-transformed `mpg` slightly is better in terms of $R^2_{adj}$, but it is harder to interpret.
+
