@@ -755,7 +755,7 @@ autoplot(m_stepwise_BIC)
 
 На графике остатков в зависимости от предсказанных значений можно видеть небольшое искривление, которое является следствием нелинейности зависимости. Поэтому можно рассмотреть вопрос о необходимости преобразования целевой переменной, или включения в модель нелинейных членов. Отклонения от нормальности заметны тольков хвостах наблюдения, но число таких наблюдений невелико. Рост дисперсии при увеличении целевой переменной не наблюдается.
 
-## Выбросы и влиятельные наблюдения
+## Выбросы и влиятельные наблюдения{#residuals_stepwise}
 Рассмотрим выбросы и влиятельные наблюдения более подробно.
 
 ```{r Выбросы и влиятельные наблюдения}
@@ -777,8 +777,24 @@ ggplot(fit_stepwise_BIC, aes(.fitted, mpg)) +
  
 ```
 
+```{r Зависимость остатков от предсказанных значений}
 
-Наибольший остаток имеет модель [Chevrolet Metro](https://wiki.zr.ru/Chevrolet_Metro). Это самая маленькая и экономичная из американских машин. Поскольку других компактных машин в наборе данных нет, этот сегмент плохо представлен в данных и имеет смысл исключить данное наблюдение из выборки. Полученную модель все равно нельзя использовать для прогнозирования пробега машин этого класса, т.к. выборка для таких машин не является репрезентативной (содержит одно наблюдение).
+ggplot(fit_stepwise_BIC, aes(.fitted, .resid)) +
+  geom_point(aes(size = .cooksd, colour = .hat)) +
+  geom_hline(yintercept = 0,
+            colour = "red", linetype = "dashed") +
+  scale_colour_gradient(low = "black", high = "red") +
+  ggrepel::geom_label_repel(
+    data = filter(fit_stepwise_BIC, .cooksd > 4/nrow(cars)),
+    mapping = aes(label = model), alpha = 0.25) +
+  labs(title = "Зависимость остатков от предсказанных значений",
+       x = "Прогноз mpg", y = "Остаток", 
+       colour = "Леверидж", size = "Расстояние Кука")
+ 
+```
+
+
+Наибольший остаток имеет модель [Chevrolet Metro](https://wiki.zr.ru/Chevrolet_Metro). Это самая маленькая и экономичная из американских машин. 
 
 
 ## Нелинейное преобразование целевой переменной
@@ -814,11 +830,11 @@ autoplot(m_log)
 Для выявления нелинейных зависимостей от объясняющих переменных и пропущенных предикторов можно применять метод графического анализа остатков, строя диаграммы рассеяния для остатков в зависимости от других переменных в наборе данных.
 
 ```{r Зависимость остатков исходной модели, fig.height=7}
-cars_fit <- cars %>% 
+fit_cars_stepwise <- cars %>% 
   add_residuals(m_stepwise_BIC) %>%
   gather(key = "Переменная", value = "Значение", price:fuel_cap)
 
-ggplot(cars_fit, aes(x = `Значение`, y = `resid`)) +
+ggplot(fit_cars_stepwise, aes(x = `Значение`, y = `resid`)) +
   geom_point() + 
   geom_smooth(se = F) +
   facet_wrap(~ `Переменная`, scales = "free_x", ncol = 2) +
@@ -859,11 +875,11 @@ autoplot(m_poly)
 Зависимость остатков новой модели от остальных переменных.
 
 ```{r Остатки полиномиальной модели в зависимости от остальных переменных, fig.height=7}
-cars_poly_fit <- cars %>% 
+fit_cars_poly <- cars %>% 
   add_residuals(m_poly) %>%
   gather(key = "Переменная", value = "Значение", price:fuel_cap)
 
-ggplot(cars_poly_fit, aes(x = `Значение`, y = `resid`)) +
+ggplot(fit_cars_poly, aes(x = `Значение`, y = `resid`)) +
   geom_point() + 
   geom_smooth(se = F) +
   facet_wrap(~ `Переменная`, scales = "free_x", ncol = 2) +
@@ -873,4 +889,46 @@ ggplot(cars_poly_fit, aes(x = `Значение`, y = `resid`)) +
 
 Зависимости остатков от других переменных исчезли. Таким образом информация, доступная в этом наборе данных, была использована полностью.
 
+В заключение сравним предсказания модели с фактом. 
+
+```{r Выбросы и влиятельные наблюдения полиномиальной модели}
+fit_cars_poly <- m_poly %>% 
+  fortify() %>% # сохранили остатки, предсказания и показатели влиятельности в набор
+  merge(., cars) # добавили исходные данные (merge удаляет дублирующиеся при слиянии столбцы)
+
+ggplot(fit_cars_poly, aes(.fitted, mpg)) +
+  geom_point(aes(size = .cooksd, colour = .hat)) +
+  geom_line(aes(.fitted, .fitted), 
+            colour = "red", linetype = "dashed") +
+  scale_colour_gradient(low = "black", high = "red") +
+  ggrepel::geom_label_repel(
+    data = filter(fit_cars_poly, .cooksd > 4/nrow(cars)),
+    mapping = aes(label = model), alpha = 0.25) +
+  labs(title = "Влиятельные наблюдения",
+       x = "Прогноз mpg", y = "Факт mpg", 
+       colour = "Леверидж", size = "Расстояние Кука")
+ 
+```
+
+В сравнении с результатом для предыдущей модели (см. [Выбросы и влиятельные наблюдения](#residuals_stepwise)) искривление облака точек практически не заметно, точки симметрично расположены относительно прямой "идеального результата". Отклонения прогноза и факта существенно уменьшились. 
+
+
+```{r Зависимость остатков полиномиальной модели от предсказанных значений}
+
+ggplot(fit_cars_poly, aes(.fitted, .resid)) +
+  geom_point(aes(size = .cooksd, colour = .hat)) +
+  geom_hline(yintercept = 0,
+            colour = "red", linetype = "dashed") +
+  scale_colour_gradient(low = "black", high = "red") +
+  ggrepel::geom_label_repel(
+    data = filter(fit_cars_poly, .cooksd > 4/nrow(cars)),
+    mapping = aes(label = model), alpha = 0.25) +
+  labs(title = "Зависимость остатков от предсказанных значений",
+       x = "Прогноз mpg", y = "Остаток", 
+       colour = "Леверидж", size = "Расстояние Кука")
+ 
+```
+
+
+Наибольшими остатками и расстоянием Кука выделяются два типа машин - экономиченые машины (Chevrolet Metro, Hyundai Accent, Mitsubishi Mirage), крупные легковые автомобили (Dodge Ram Wagon, Cadillac Escalade, Lincoln Navigator, Honda Odyssey, Toyota RAV4, Jeep Wrangler) и спортивные машины (Dodge Viper, Plymouth Prowler). Возможно, в этой области имеется потенциал для улучшения модели путем включения типа машины в качестве объясняющей переменной.
 
