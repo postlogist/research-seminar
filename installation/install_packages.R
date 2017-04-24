@@ -84,6 +84,7 @@ install.packages("pROC") # Multi-Class ROC
 install.packages("rbokeh")
 # also installing the dependencies ‘pryr’, ‘gistr’
 install.packages("NeuralNetTools") # Neural net visualization
+install.packages("cluster") # Clusters visualization
 
 # HTML widgets
 install.packages("flexdashboard") # HTML dashboards
