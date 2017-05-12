@@ -1,6 +1,8 @@
 ## R package installation for econometrics and simulation modeling
 ## File is adapted from install_all.R by Boris Demeshev, Higher School of Economics
 
+#install.packages("NbClust") # selecting optimal number of clusters
+#install.packages("factoextra") # cluster visualization
 
 ## R maintenance
 install.packages('installr') #R update
