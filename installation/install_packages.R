@@ -385,3 +385,5 @@ devtools::install_github("bdemeshev/rlms") # read RLMS data
 
 install.packages('OpenML') #OpenML datasets
 
+install.packages('gtrendsR') # Google Trends
+# also installing the dependency ‘googleVis’
