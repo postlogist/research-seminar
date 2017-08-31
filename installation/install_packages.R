@@ -341,7 +341,9 @@ install.packages("maptree") # decision tree visualization
 
 install.packages('foreign') #Statistical data formats
 
-install.packages('DBI') # database connectivity
+install.packages('DBI') # database connectivity interface
+
+#install.packages('odbc') # ODBC connectivity (enable if required)
 
 install.packages('RSQLite') # database connectivity
 # also installing the dependencies ‘bit’, ‘bit64’, ‘blob’
@@ -373,7 +375,7 @@ install.packages("Quandl") # get data from Quandl
 
 install.packages("sophisthse")
 
-install.packages("rusquant",repos="http://r-forge.r-project.org", type="source") #get data on russian markets
+install.packages("rusquant",repos = "http://r-forge.r-project.org", type = "source") #get data on russian markets
 
 install.packages('gapminder') #a subset of Gapminder database
 
