@@ -387,3 +387,12 @@ install.packages('OpenML') #OpenML datasets
 
 install.packages('gtrendsR') # Google Trends
 # also installing the dependency ‘googleVis’
+
+
+##
+## Packages for course EDA
+##
+
+install.packages("energy") # statistical tests for comparing distributions
+install.packages("alr3") # datasets
+
