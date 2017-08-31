@@ -18,27 +18,33 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ![Динамика популярности запросов data scientist, data science и R programming](pics/trends.png)
 ``
+
 Сервис *Google Trends* также позволяет выгружать данные с сайта в формате csv для дальнейшего анализа. Однако в R есть возможность выгрузки данных с сайта google непосредственно в R. Для этого удобно воспользоваться пакетом `gtrendsR`, который можно загрузить с помощью следующего кода (убрав #):
 
 ```{r Загрузка пакета gtrendsR}
+
 # devtools::install_github('PMassicotte/gtrendsR')
+
 ```
 
 Более подробно о пакете `gtrendsR` можно прочитать на сайте разработчика <http://github.com/PMassicotte/gtrendsR>.
 После установки необходимых пакетов на компьютер для работы с функциями пакетов нужно их подключить:
 
-```{r Подключение библиотек}
+```{r Подключение библиотек, message=FALSE, warning=FALSE}
 library(gtrendsR) # пакет для работы с Google Trends
 library(forcats) # пакет для работы с факторами
 library(tidyverse) # набор пакетов для преобразования и визуализации данных
 library(stringr) # пакет для работы со строками
 ```
+
 ## Загрузка данных с сайта Google Trends
 Для загрузки данных используется функция `gtrends()`, основным параметром которой является `keyword` - вектор ключевых слов, по которым осуществляются запросы. Другие параметры: `geo` - вектор регионов, которые включаются в запрос, `time`- временной период, `gprop` - google продукты, для которых будет выполнен запрос ("web", "news", "images", "froogle", "youtube"). Более подробно о функции можно почесть в справочной системе R, набрав в строке ввода `?gtrends`. Например, для получения динамики популярности запросов "data scientist", "data science" и "R programming" за весь доступный период (с 2004 года) напишем следующий код:
 
 ```{r Загрузка данных}
-dtrend <- gtrends(c("data scientist", "data science", "R programming"), time = "all")
+dtrend <- gtrends(c("data scientist", "data science", "R programming"), time = "today+5-y")
+
 ```
+
 После выполнения кода в `dtrend` будут содержаться данные типа `list` следующей структуры:
 
 ```{r Структура данных}
@@ -48,26 +54,31 @@ str(dtrend)
 ## Анализ и интерпретация данных
 Первый элемент списка `dtrend$interest_over_time` содержит динамику популярности каждого ключевого слова за период с 2004 года по настроящее время. В столбце `hit` содержится не абсолютное количество запросов по данному ключевому слову, а относительное, которое высчитывается по специальному алгоритму в зависимости от популярности запросов в другие периоды времени и по другим ключевым словам.
 
-``` {r Динамика популярности каждого ключевого слова}
+```{r Динамика популярности каждого ключевого слова}
+
 interest_over_time <- dtrend$interest_over_time
 head(interest_over_time, 10)
 ggplot(data=interest_over_time) + 
   geom_line(mapping = aes(x=date, y=hits, color=keyword), size=1) +
   labs(title="Динамика популярности data scientist, data science и R programming")
+
 ```
 
 Как можно наблюдать на графике, популярность "data scientist", "data science" и "R programming" растет стремительно, особенно в последние 5 лет.
 
 Второй элемент списка `dtrend$interest_by_region` содержит распределение популярности ключевых слов по регионам. Найдем 10-ку лидеров по популярности каждого из ключевых слов:
 
-``` {r Регионы-лидеры по популярности}
+```{r Регионы-лидеры по популярности}
 interest_by_region <- dtrend$interest_by_region
-get_top10_regions <- function(x){
-top10_regions <- head(interest_by_region %>% 
-                                    filter(keyword==x) %>% 
-                                    group_by(location) %>%
-                                    summarise(hits=sum(hits)) %>%
-                                    arrange(desc(hits)), 10) # поиск 10 регионов с наивысшей популярностью запроса
+
+plot_top10_regions <- function(x){
+top10_regions <- interest_by_region %>% 
+                      filter(keyword==x) %>% 
+                      group_by(location) %>%
+                      summarise(hits=sum(hits)) %>%
+                      arrange(desc(hits)) %>%
+                      head(10)# поиск 10 регионов с наивысшей популярностью запроса
+
 top10_regions <- top10_regions %>% 
   mutate(location = fct_inorder(location)) # преобразования столбца location в фактор, чтобы на графике порядок отображения регионов был не в алфавитном порядке, а в соответствии с убывающими значениями hits
 ggplot(top10_regions) + 
@@ -75,9 +86,9 @@ ggplot(top10_regions) +
   coord_flip() +
   labs(title=str_c("10-ка регионов-лидеров по популярности ", x))
 }
-get_top10_regions("data scientist")
-get_top10_regions("data science")
-get_top10_regions("R programming")
+plot_top10_regions("data scientist")
+plot_top10_regions("data science")
+plot_top10_regions("R programming")
 
 ```
 
@@ -103,7 +114,7 @@ head(dtrend$related_queries %>% filter(keyword=="R programming") %>% select(subj
 
 Изначально мы получили тренды популярности запросов по всему миру, однако есть возможность сравнить тренды в разных странах. Например, мы можем сравнить тренды популярности запроса "data scientist" в России и США:
 
-``` {r Тренды популярности data scientist в России и США}
+```{r Тренды популярности data scientist в России и США}
 dtrend_ru <- gtrends(c("data scientist"), geo=c("RU","US"), time="all")
 ggplot(dtrend_ru[[1]]) + 
   geom_line(mapping = aes(x = date, y = hits, color = geo), size = 1) +
