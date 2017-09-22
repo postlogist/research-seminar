@@ -24,7 +24,7 @@ D <- 10000 # Объем годовой потребности
 
 **Советы**
 
-  1. Изучите блокнот `plotting_functions.Rmd`  
+  1. Изучите блокнот `ggplot_plotting_functions.Rmd`  
   2. Про добавление легенды для функций можно почитать [здесь](http://stackoverflow.com/questions/18060116/adding-legend-to-ggplot-when-lines-were-added-manually)  
   3. Вам также поможет глава [graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html) в книге R for Data Science book
 
