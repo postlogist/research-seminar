@@ -164,13 +164,13 @@ ggplot(data = mpg, mapping = aes(x = cty)) +
 <p><strong>Примечание</strong>: удерживая клавишу <code>Shift</code>, кликните левой кнопкой мыши по ссылке на рисунок, чтобы открыть его для просмотра в ассоциированной программе. Если ссылка на работает, попробуйте установить рабочую директорию в Rstudio: <code>Session/Set Working Directory/To Source File Location</code>.</p>
 <p><strong>Советы</strong></p>
 <ul>
-<li><p>Список названий цветов, доступных в R, можно найти <a href="http://research.stowers-institute.org/efg/R/Color/Chart/ColorChart.pdf">здесь</a></p></li>
+<li><p>Список названий цветов, доступных в R, можно найти <a href="http://www.sthda.com/english/wiki/colors-in-r">здесь</a> или просмотреть с помощью функции <code>colors()</code>.</p></li>
 <li><p>Функция плотности распределения вероятности для данного распределения - экспоненциальная:</p></li>
 </ul>
 <p><span class="math display">\[ f(x) = \lambda e^{-\lambda x}, \]</span> где <span class="math inline">\(\lambda\)</span> - это <em>интенсивность</em> (<em>rate</em>). Вы можете оценить параметр интенсивности на основе исходных данных с помощью формулы: <span class="math display">\[ \lambda = 1 / \bar{x} \]</span></p>
 <p>Вы можете задать собственную функцию, используя два аргумента: x и интенсивность (rate), - или использовать встроенную функцию плотности экспоненциального распределения <code>dexp()</code>. Подробнее о функции смотрите в справке <code>?dexp</code>.</p>
 <p>Вертикальная линия соответствует средней цене. О том, как ее добавить, смотрите в справочной информации <code>?geom_vline</code>.</p>
-<pre class="r"><code># Напишите свой здесь
+<pre class="r"><code># Напишите свой код здесь
 
 # Рассчитайте параметры экспоненциального распределения
 # params &lt;- list(rate = ____ )
