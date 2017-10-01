@@ -53,9 +53,21 @@ library(stringr)
 
 Загрузим данные из файла `NYtaxi.zip`. Чтобы распаковать архив, в котором содержится файл `NYtaxi.csv`, воспользуемся функцией `unz()`.
 
-```{r Чтение файла данных, warning=FALSE, message=FALSE}
-taxi_csv <- unz("data/NYtaxi.zip", "NYtaxi.csv") 
-taxi <- read_csv(taxi_csv)
+```{r Загрузка и чтение файла данных, message=FALSE, warning=FALSE}
+
+data_url <- 'http://rawgit.com/postlogist/big_datasets/master/ny_taxi/NYtaxi.zip'
+
+# Скачиваем данные из репозитория, если файла нет на компьютере
+if (!file.exists('NYtaxi.zip')) {
+  download.file(data_url,
+                destfile = 'NYtaxi.zip',
+                mode = 'wb')
+}
+
+# Извлекаем файл из архива и загружаем в R
+taxi <- unz('NYtaxi.zip', 'NYtaxi.csv') %>%
+  read_csv()
+
 ```
 
 Набор данных содержит `r nrow(taxi)` наблюдений о поездках и `r ncol(taxi)` переменных, описанных выше. Выведем краткую обобщающую сводку по набору данных.
