@@ -342,20 +342,32 @@ head(mpg)</code></pre>
 ## 3         ford mustang   4.0  2008     6 manual(m5)     r    17    26
 ## 4         ford mustang   4.0  2008     6   auto(l5)     r    16    24
 ## # ... with 2 more variables: fl &lt;chr&gt;, class &lt;chr&gt;</code></pre>
+<pre class="r"><code># или так:
+filter(mpg, drv == 'r', cyl == 6)</code></pre>
+<pre><code>## # A tibble: 4 x 11
+##   manufacturer   model displ  year   cyl      trans   drv   cty   hwy
+##          &lt;chr&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;      &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt;
+## 1         ford mustang   3.8  1999     6 manual(m5)     r    18    26
+## 2         ford mustang   3.8  1999     6   auto(l4)     r    18    25
+## 3         ford mustang   4.0  2008     6 manual(m5)     r    17    26
+## 4         ford mustang   4.0  2008     6   auto(l5)     r    16    24
+## # ... with 2 more variables: fl &lt;chr&gt;, class &lt;chr&gt;</code></pre>
 </div>
 <div id="-2.---------" class="section level3">
 <h3>Пример 2. Отбор по вхождению в множество и сравнение действительных чисел</h3>
 <p>Действительные числа хранятся с ограниченной точностью. Это может вызывать проблемы при сравнении таких чисел на строгое равенство:</p>
-<pre class="r"><code>sqrt(2)^2 == 2</code></pre>
+<pre class="r"><code># Нельзя использовать для действительных чисел:
+sqrt(2)^2 == 2</code></pre>
 <pre><code>## [1] FALSE</code></pre>
 <p>Безопаснее пользоваться функцией <code>near()</code>:</p>
-<pre class="r"><code>near(sqrt(2)^2, 2)</code></pre>
+<pre class="r"><code># Правильно сравнивать действительные числа так:
+near(sqrt(2)^2, 2)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <p>Отобрать автомобили марок Honda и Toyota с автоматической коробкой передач и объемом двигателя 1.8 литра.</p>
 <pre class="r"><code>filter(mpg, 
-       manufacturer %in% c('honda', 'toyota') &amp;
-         str_detect(trans, 'auto') &amp;
-         near(displ, 1.8))</code></pre>
+       manufacturer %in% c('honda', 'toyota'),
+       str_detect(trans, 'auto'),
+       near(displ, 1.8))</code></pre>
 <pre><code>## # A tibble: 5 x 11
 ##   manufacturer   model displ  year   cyl    trans   drv   cty   hwy    fl
 ##          &lt;chr&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;    &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;
@@ -383,6 +395,7 @@ head(mpg)</code></pre>
 ## 7   volkswagen new beetle   1.9  1999     4 manual(m5)     f    35    44
 ## 8   volkswagen new beetle   1.9  1999     4   auto(l4)     f    29    41
 ## # ... with 2 more variables: fl &lt;chr&gt;, class &lt;chr&gt;</code></pre>
+<p><strong>Замечание:</strong> в качестве условия отбора можно использовать любое выражение, которое возвращает <code>TRUE</code> или <code>FALSE</code> для каждой строки обрабатываемой таблицы.</p>
 </div>
 </div>
 <div id="-filter" class="section level2">
@@ -408,12 +421,16 @@ head(flights)</code></pre>
 <h3>Упражнение 1. Отбор по сочетанию условий</h3>
 <p>Найдите все рейсы компаний ‘Delta Airlines’, ‘American Airlines’ и ‘United Airlines’, которые вылетели в Хьюстон (<code>IAH</code> или <code>HOU</code>) летом 2013 года. При этом рейс должен был вылететь без опоздания, но совершить посадку с задержкой более 1 часа.</p>
 <p>Коды авиакомпаний можно посмотреть в таблице: <code>nycflights13::airlines</code>.</p>
-<p><strong>Совет:</strong> Вместо объединения нескольких условий союзом <code>&amp;</code> их можно перечислить через запятую в списке аргументов <code>filter()</code>.</p>
 <pre class="r"><code>#filter(flights,
 #       ...
 #       )</code></pre>
 <p>Должно получиться 7 строк.</p>
-<p><strong>Замечание:</strong> В пакете <code>dplyr</code> имеется функция <code>between()</code>, которая может использоваться для отбора по условию вхождения в интервал значений. Обратите внимание, что границы интервала входят в него.</p>
+<p><strong>Подсказки:</strong></p>
+<ul>
+<li>Вместо объединения нескольких условий союзом <code>&amp;</code> их можно перечислить через запятую в списке аргументов <code>filter()</code>.<br />
+</li>
+<li>В пакете <code>dplyr</code> имеется функция <code>between()</code>, которая может использоваться для отбора по условию вхождения в интервал значений. Обратите внимание, что границы интервала входят в него.</li>
+</ul>
 </div>
 <div id="-2.------" class="section level3">
 <h3>Упражнение 2. Отбор по вхождению в интервал значений</h3>
