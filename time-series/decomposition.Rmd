@@ -441,7 +441,7 @@ autoplot(elecequip_sd) +
 elec_sd <- elec %>% 
   stl(s.window = 7)
 
-autoplot(elecequip_sd) +
+autoplot(elec_sd) +
   labs(title = 'STL декомпозиция мультипликативного ряда')
 
 ```
