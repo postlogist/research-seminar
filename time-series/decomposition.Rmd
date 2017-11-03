@@ -309,7 +309,7 @@ $$ y_t = S_t \cdot T_t \cdot E_t. $$
 
 
 
-```{r Классическая декомпозиция мультипликативного ряда, warning=F}
+```{r Классическая декомпозиция мультипликативного ряда, warning=FALSE}
 
 elec_d <- elec %>%
   decompose(type = 'multiplicative')
