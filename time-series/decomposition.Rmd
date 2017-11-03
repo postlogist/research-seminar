@@ -17,18 +17,20 @@ knitr::opts_chunk$set(dev = 'svg', warning = FALSE)
 
 # Введение
 
-В этом блокноте рассмотрены понятие временного ряда и компонентов временного ряда. Показано использование доступных в R инструментов для исследования структуры временных рядов.
+В этом блокноте рассмотрены понятие временного ряда и компонентов временного ряда. 
+Показано использование доступных в R инструментов для загрузки данных временных рядов и исследования их структуры.
 
 
-```{r Подключение библиотек}
-suppressMessages(library(tidyverse)) # ggplot2 и трансформация данных
-suppressMessages(library(forecast)) # анализ временных рядов и прогнозирование
-suppressMessages(library(sophisthse)) # Загрузка временных рядов из базы Sophist
-suppressMessages(library(zoo)) # Поддержка высокочастотных рядов
-suppressMessages(library(lubridate)) # обработка дат
-suppressMessages(library(scales)) # Форматирование осей на графиках ggplot2
-suppressMessages(library(ggseas)) # Расширения ggplot для временных рядов
-suppressMessages(library(fpp)) # Примеры временных рядов
+```{r Подключение библиотек, warning=FALSE, message=FALSE}
+library(tidyverse) # визуализация и трансформация данных
+library(forecast) # анализ временных рядов и прогнозирование
+library(sophisthse) # Загрузка временных рядов из базы Sophist
+library(zoo) # Поддержка высокочастотных рядов
+library(lubridate) # обработка дат
+library(scales) # Форматирование осей на графиках ggplot2
+library(ggseas) # Расширения ggplot для временных рядов
+library(fpp) # Примеры временных рядов
+library(quantmod) # Загрузка финансовых данных из Интернет
 ```
 
 # Понятие временного ряда
@@ -109,28 +111,34 @@ ausbeer %>%
   geom_line(color = 'blue')
 ```
 
-```{r График курса Евро}
-euro <- read.zoo('data/euro.tsv', 
-                 format = '%d.%m.%Y', 
-                 head = TRUE, dec = ',')
+Загрузим данные о курсе Евро к рублю из Интернет с помощью `quantmod::getSymbols()`:
 
+```{r Загрузка курса Евро к рублю из Интернет, warning=FALSE, message=FALSE}
+euro <- getSymbols('EUR/RUB', 
+                   src = 'oanda', 
+                   from = today() - months(6),
+                   auto.assign = FALSE)
+
+```
+
+Визуализация курса:
+
+```{r График курса Евро}
 # Для объектов zoo синтаксис отличается, см. ?autoplot.zoo
 euro %>%
   autoplot() + 
     labs(y = 'руб/Евро', x = NULL,
-       title = 'Курс Евро за 4 месяца') +
-    scale_x_date(date_breaks = '1 month',
-                 date_minor_breaks = '1 week') +
+       title = 'Курс Евро за 6 месяцев') +
+    scale_x_date(date_breaks = '1 months') + 
   geom_line(color = 'blue')
 
-# График курса за месяц
+# График курса за 6 недель
 euro %>%
-  window(start = dmy('01.10.2016')) %>%
+  window(start = today() - weeks(6)) %>%
     autoplot() +
       labs(y = 'руб/Евро', x = NULL,
-         title = 'Курс Евро за 1 месяц') +
-      scale_x_date(date_breaks = '1 week',
-                   date_minor_breaks = '1 day') +
+         title = 'Курс Евро за 6 недель') +
+      scale_x_date(date_breaks = '1 week') +
   geom_line(color = 'blue')
 
 ```
@@ -223,7 +231,15 @@ autoplot(cbind('Оригинал' = babies88,
 
 ```
 
-**Замечание**: Функция `forecast::autolayer()` не работает с рядами `zoo`, поэтому приходится рисовать несколько рядов "склеивая" из них один многомерный ряд при помощи `cbind()`.
+**Замечание**: Функция `forecast::autolayer()` не работает с рядами `zoo`, поэтому приходится рисовать несколько рядов "склеивая" из них один многомерный ряд при помощи `cbind()`. Многомерный ряд представляет собой матрицу, где каждый временной ряд - это столбец:
+
+```{r Как выглядит многомерный временной ряд}
+cbind('Оригинал' = babies88, 
+      '3-месячное СС' = rollmean(babies88, 91)) %>%
+        window(start = ymd('1988-03-01'),
+               end = ymd('1988-03-07'))
+```
+
 
 
 С помощью пакета `ggseas` можно вычислять другие функции для сглаживания рядов, например, скользящую медиану.
@@ -450,10 +466,11 @@ autoplot(elec_sd_log) +
 names(elecequip_sd) 
 
 # Компоненты ряда хранятся внутри вложенного объекта time.series
-names(elecequip_sd$time.series)
+elecequip_sd$time.series %>% head(3)  
 
 # Это матрица, а не список, $ не работает, используйте []
-head(elecequip_sd$time.series, 3)  
+elecequip_sd$time.series[, 'seasonal'] %>% head()
+
 ```
 
 Для извлечения компонентов удобнее использовать функции `trendcycle()`, `seasonal()`, `remainder()`.
@@ -523,7 +540,3 @@ autoplot(ausbeer, series = 'Оригинал') +
 ```
 
 Другая возможность - использование пакета `ggseas` [см. здесь](http://ellisp.github.io/blog/2016/03/28/ggseas-update) и [здесь](https://github.com/ellisp/ggseas).
-
-
-
-
