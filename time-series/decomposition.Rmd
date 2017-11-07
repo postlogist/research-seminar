@@ -65,50 +65,61 @@ library(quantmod) # Загрузка финансовых данных из Ин
 
 elecsales %>%
   autoplot() +
-    labs(y = 'ГВт-ч', 
+    labs(y = 'ГВт-ч', x = NULL,
        title = 'Ежегодные продажи электроэнергии бытовым потребителям (Австралия)',
        caption = 'Источник: Australian Energy Market Operator, fpp') +
-  geom_line(color = 'blue')
+  geom_line(color = 'blue') +
+  scale_x_continuous(minor_breaks = 1989:2008)
 
 ```
 
 ```{r График продаж односемейных домов}
 hsales %>%
   autoplot() +
-    labs(y = 'млн', 
+    labs(y = 'млн',  x = NULL,
        title = 'Ежемесячные продажи новых частных домов (США)',
        caption = 'Источник: US Census Bureau, Manufacturing and Construction Division') +
-  geom_line(color = 'blue')
+  geom_line(color = 'blue') +
+  scale_x_continuous(minor_breaks = 1973:1996)
 
 ```
 
 ```{r График производства электроэнергии}
 elec %>%
   autoplot() +
-    labs(y = 'ГВт-ч', 
+    labs(y = 'ГВт-ч',  x = NULL,
        title = 'Ежемесячное производство электроэнергии (Австралия)',
        caption = 'Источник: Makridakis, Wheelwright and Hyndman (1998) Forecasting: methods and applications') +
-  geom_line(color = 'blue')
+  geom_line(color = 'blue') +
+  scale_x_continuous(minor_breaks = 1955:1997,
+                     breaks = seq(1955, 1995, by = 5))
 
 ```
+
 
 ```{r График производства электронного оборудования}
 elecequip %>%
   autoplot() +
-    labs(y = 'Индекс (2005.1=100)', 
+    labs(y = 'Индекс (2005.1=100)',  x = NULL,
        title = 'Ежемесячный индекс производства электронного оборудования \n(16 стран ЕС)',
        caption = 'Источник: Eurostat')  +
-  geom_line(color = 'blue')
+  geom_line(color = 'blue') +
+  scale_x_continuous(minor_breaks = 1995:2013,
+                   breaks = seq(1996, 2015, by = 2))
+
 
 ```
 
 ```{r График производства пива}
 ausbeer %>%
   autoplot() +
-    labs(y = 'мегалитры', 
+    labs(y = 'мегалитры',  x = NULL,
        title = 'Ежеквартальный объем производства пива (Австралия)',
        caption = 'Источник: Australian Bureau of Statistics. Cat. 8301.0.55.001') +
-  geom_line(color = 'blue')
+  geom_line(color = 'blue') +
+  scale_x_continuous(minor_breaks = 1955:2010,
+                   breaks = seq(1955, 2010, by = 5))
+  
 ```
 
 Загрузим данные о курсе Евро к рублю из Интернет с помощью `quantmod::getSymbols()`:
