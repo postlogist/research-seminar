@@ -1,0 +1,168 @@
+---
+title: "Пример декомпозиции дневных данных"
+author: "Морозова Ю.А."
+date: '9 ноября 2017 г '
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Введение
+
+В данном примере мы рассмотрим декомпозицию временного ряда с месячной и дневной составляющей сезонности.
+
+```{r Подключение библиотек, warning=FALSE, message=FALSE}
+library(tidyverse) # визуализация и трансформация данных
+library(forecast) # анализ временных рядов и прогнозирование
+library(zoo) # Поддержка высокочастотных рядов
+library(lubridate) # обработка дат
+library(scales) # Форматирование осей на графиках ggplot2
+```
+
+Для анализа используем ежедневные данные о рождаемости в одном из штатов Канады.
+
+```{r График рождаемости}
+
+babies <- read.zoo('data/babies.tsv', 
+                   format = '%d.%m.%Y', head = TRUE)
+
+# График за весь период
+babies %>%
+  autoplot() +
+    labs(y = 'число новорожденных', x = NULL,
+       title = 'Ежедневные данные о рождаемости (один из штатов Канады)') +
+    scale_x_date(date_minor_breaks = '1 year') +
+  geom_line(color = 'blue')
+
+# График за 2 года
+babies %>%
+    window(start = dmy('01.01.1988'),
+         end = dmy('31.12.1989')) %>%
+  autoplot() +
+    labs(y = 'число новорожденных', x = NULL,
+       title = 'Ежедневные данные о рождаемости (один из штатов Канады)') +
+    scale_x_date(date_minor_breaks = '1 month') +
+  geom_line(color = 'blue')
+
+# График за 1 месяц
+babies %>% 
+  window(start = dmy('01.09.1988'),
+         end = dmy('30.09.1988')) %>%
+  autoplot() +
+    labs(y = 'число новорожденных', x = NULL,
+       title = 'Ежедневные данные о рождаемости (один из штатов Канады)') +
+    scale_x_date(date_minor_breaks = '1 day', date_breaks = '1 week',
+                 date_labels = '%d.%m.%y (%a)') +
+  geom_line(color = 'blue')
+
+```
+
+Как можно увидеть из графиков, во временном ряде присутствуют как сезонные колебания, связанные с днями недели, так и связанные с месяцами.
+
+#Выделение месячной сезонной составляющей
+
+Чтобы убрать из ряда влияние дневной сезонности, агрегируем данные по месяцам.
+
+```{r Агрегация данных по месяцам}
+babies_m <- aggregate(babies, as.Date(as.yearmon(time(babies))), sum) %>%
+ts(frequency = 12, start = c(1977,1))
+
+babies_m %>%
+  autoplot() +
+    labs(y = 'число новорожденных', x = NULL,
+       title = 'Ежемесячные данные о рождаемости (один из штатов Канады)')
+
+```
+
+Теперь выполним сезонную декомпозицию по месяцам.
+
+```{r Сезонная декомпозиция по месяцам}
+babies_m_stl <- babies_m %>%
+  stl(s.window = 'periodic')
+autoplot(babies_m_stl)
+
+autoplot(head(seasonal(babies_m_stl), 12)) +
+  scale_x_date(date_breaks = '1 month', date_labels = '%b') +
+  geom_hline(yintercept = 0)+
+  labs(y = 'число новорожденных', x = NULL,
+       title = 'Месячные сезонные коэффициенты рождаемости')
+
+ggplot()+
+  autolayer(babies_m, series = 'Факт') +
+  autolayer(seasonal(babies_m_stl)+trendcycle(babies_m_stl), series = 'Модель') +
+  labs(y = 'число новорожденных', x = NULL,
+       title = 'Сравнение фактических и модельных значений')
+  
+```
+
+Теперь очистим исходные данные от месячной сезонной составляющей. Поскольку модель аддитивная, месячные коэффициенты разделим на количество дней в каждом месяце.
+
+```{r Очистка от месячной сезонности}
+month_coef <- tibble(mseasonal = head(seasonal(babies_m_stl),12), mon = as.double(c(1:12))) %>%
+  mutate(mseasonal_by_day = round(mseasonal/days_in_month(mon),0))
+
+month_coef_by_day <- tibble(babies_val = as.double(babies), date = time(babies), mon = month(time(babies))) %>%
+  left_join(month_coef, by = c("mon"="mon")) %>%
+  select(mseasonal_by_day)
+
+babies_ts <- ts(babies, frequency = 7, start = c(1,1))
+month_coef_by_day_ts <- ts(month_coef_by_day, frequency = 7, start = c(1,1))
+
+babies_madj_ts <- babies_ts - month_coef_by_day_ts %>%
+  ts(frequency = 7, start = c(1,1))
+
+autoplot(babies_madj_ts)+
+    labs(y = 'число новорожденных', x = NULL,
+       title = 'Ежедневные данные о рождаемости (один из штатов Канады)\nбез учета месячной сезонности') +
+  geom_line(aes(y = babies_madj_ts), color = 'blue')
+
+```
+
+#Декомпозиция на уровне дней недели
+
+Произведем декомпозицию на уровне дней недели.
+
+```{r Декомпозиция по дням недели}
+babies_madj_d <- babies_madj_ts %>%
+ decompose(type = 'additive')
+
+seasonal(babies_madj_d) %>%
+  window(start = c(650,1)) %>%
+  autoplot()+
+  labs(y = 'число новорожденных', x = NULL,
+       title = 'Дневные сезонные коэффициенты рождаемости')
+
+trendcycle(babies_madj_d) %>%
+  window(start = c(650,1)) %>%
+  autoplot()+
+  labs(y = 'число новорожденных', x = NULL,
+       title = 'Тренд')
+
+remainder(babies_madj_d) %>%
+  window(start = c(650,1)) %>%
+  autoplot()+
+  labs(y = 'число новорожденных', x = NULL,
+       title = 'Остаток')
+
+autoplot(head(seasonal(babies_madj_d), 7)) +
+  geom_hline(yintercept = 0)+
+  labs(y = 'число новорожденных', x = NULL,
+       title = 'Дневные сезонные коэффициенты рождаемости')
+```
+
+Сравним модельные значения с фактическими данными.
+
+```{r Сравнение модельных значений с фактическими данными}
+babies_model <- seasonal(babies_madj_d) + trendcycle(babies_madj_d) + month_coef_by_day_ts 
+
+babies_model <- zoo(babies_model, order.by = time(babies))
+
+cbind('Факт' = babies,
+'Модель' = babies_model) %>%
+  window(start = '1989-01-01') %>%
+  autoplot(facets = NULL) +
+  labs(y = 'число новорожденных', x = NULL,
+       title = 'Сравнение фактических и модельных значений')
+```
