@@ -402,10 +402,10 @@ $$ U= \sqrt{ \frac{SSPE(модель)}{SSPE(\text{наивный прогноз}
 
 ```{r Сравнение ошибок в тестовом периоде}
 
-rbind(accuracy(beer_m, ausbeer)[2,], # ошибки в тестовом периоде - 2 строка
-      accuracy(beer_n, ausbeer)[2,],
-      accuracy(beer_sn, ausbeer)[2,],
-      accuracy(beer_d, ausbeer)[2,]) %>%
+rbind(accuracy(beer_m, ausbeer)['Test set',],
+      accuracy(beer_n, ausbeer)['Test set',],
+      accuracy(beer_sn, ausbeer)['Test set',],
+      accuracy(beer_d, ausbeer)['Test set',]) %>%
   as_tibble() %>%
   round(2) %>%
   mutate(`Метод` = c('Среднее', 'Наивный', 'С. наивный', 'Дрейф')) %>%

@@ -535,10 +535,10 @@ accuracy(beer_d, ausbeer)</code></pre>
 <div id="-------" class="section level3">
 <h3>Как сравнить модели по ошибке в тестовом периоде</h3>
 <p>Чтобы сравнить модели на основе ошибки в тестовом периоде, можно собрать все показатели ошибки в одну таблицу, с которой можно работать, используя функции пакета <code>dplyr</code>:</p>
-<pre class="r"><code>rbind(accuracy(beer_m, ausbeer)[2,], # ошибки в тестовом периоде - 2 строка
-      accuracy(beer_n, ausbeer)[2,],
-      accuracy(beer_sn, ausbeer)[2,],
-      accuracy(beer_d, ausbeer)[2,]) %&gt;%
+<pre class="r"><code>rbind(accuracy(beer_m, ausbeer)['Test set',],
+      accuracy(beer_n, ausbeer)['Test set',],
+      accuracy(beer_sn, ausbeer)['Test set',],
+      accuracy(beer_d, ausbeer)['Test set',]) %&gt;%
   as_tibble() %&gt;%
   round(2) %&gt;%
   mutate(`Метод` = c('Среднее', 'Наивный', 'С. наивный', 'Дрейф')) %&gt;%
