@@ -200,7 +200,7 @@ autoplot(wmurders_subset, series = 'Факт') +
   autolayer(wmurders_md$mean, series = 'Мульт. зат. тренд') +
 
   labs(title = 'Уровень убийств женщин в США, на 100 000 населения',
-       y = NULL, x = NULL)
+       y = NULL, x = NULL, color = NULL)
 
 ```
 
@@ -278,7 +278,7 @@ autoplot(j_arrivals_subset, series = 'Факт') +
   autolayer(j_arrivals_mdt$mean, series = 'Зат. мульт. тренд') +
 
   labs(title = 'Ежеквартальное количество визитов японцев в Австралию',
-       y = 'тыс.', x = NULL)
+       y = 'тыс.', x = NULL, color = NULL)
 
 ```
 
@@ -394,7 +394,7 @@ retail_auto_fc <- forecast(retail_auto, h = h)
 autoplot(retail, series = 'Факт') +
   autolayer(retail_auto_fc$mean, series  = 'Прогноз')  +
   labs(title = retail_title, 
-       y = retail_units, x = NULL)
+       y = retail_units, x = NULL, color = NULL)
 
 ```
 
