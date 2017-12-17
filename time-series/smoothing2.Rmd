@@ -413,7 +413,7 @@ summary(retail_auto)
 ```{r Задание спецификации модели вручную}
 
 # Построение модели
-retail_md <- ets(retail_train, model = 'ZMZ')
+retail_md <- ets(retail_train, model = 'ZMZ', damped = TRUE)
 summary(retail_md)
 # Прогнозирование
 retail_md_fc <- forecast(retail_md, h = h)

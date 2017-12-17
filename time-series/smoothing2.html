@@ -421,12 +421,12 @@ autoplot(retail, series = 'Факт') +
 <p>Получена модель с мультипликативной сезонностью, аддитивным затухающим трендом и мультипликативной ошибкой. Коэффициент затухания вблизи своего максимального значения (тренд близок к линейному).</p>
 <p>На тестовом периоде модель дала немного заниженный прогноз, т.к. в ней использовался затухающий тренд. Попробуем построить модель Винтерса с мультипликативным затухающим трендом. Тип сезонности и ошибки будет определен автоматически.</p>
 <pre class="r"><code># Построение модели
-retail_md &lt;- ets(retail_train, model = 'ZMZ')
+retail_md &lt;- ets(retail_train, model = 'ZMZ', damped = TRUE)
 summary(retail_md)</code></pre>
 <pre><code>## ETS(M,Md,M) 
 ## 
 ## Call:
-##  ets(y = retail_train, model = &quot;ZMZ&quot;) 
+##  ets(y = retail_train, model = &quot;ZMZ&quot;, damped = TRUE) 
 ## 
 ##   Smoothing parameters:
 ##     alpha = 0.8689 
