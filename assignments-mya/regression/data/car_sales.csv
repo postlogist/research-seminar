@@ -1,0 +1,178 @@
+Sales of motor cars
+"column - 			description"
+-----------------------------------------
+"manufact - 		Car Manufacturer"
+"model - 			Model"
+"country - 			Country of Origin"
+sales - Sales in thousands
+resale - 4-year resale value
+"type - 			Automobile or Truck"
+"price - 			Sale price, in K$"
+"engine_s - 		Displacement volume"
+"horsepow - 		Power"
+"wheelbas - 		Wheel Base"
+"width - 			Width"
+"length - 			Length"
+"curb_wgt - 		Curb Weight"
+"fuel_cap - 		Fuel Capacity, gallons"														
+"mpg - 				Fuel Efficiency, miles per gallon"														
+
+
+manufact	model	country	sales	resale	type	price	engine_s	horsepow	wheelbas	width	length	curb_wgt	fuel_cap	mpg
+Acura	Integra	Japan	16,919	16,36	Automobile	21,5	1,8	140	101,2	67,3	172,4	2,639	13,2	28
+Acura	TL	Japan	39,384	19,875	Automobile	28,4	3,2	225	108,1	70,3	192,9	3,517	17,2	25
+Acura	CL	Japan	14,114	18,225	Automobile	 	3,2	225	106,9	70,6	192	3,47	17,2	26
+Acura	RL	Japan	8,588	29,725	Automobile	42	3,5	210	114,6	71,4	196,6	3,85	18	22
+Audi	A4	Europe	20,397	22,255	Automobile	23,99	1,8	150	102,6	68,2	178	2,998	16,4	27
+Audi	A6	Europe	18,78	23,555	Automobile	33,95	2,8	200	108,7	76,1	192	3,561	18,5	22
+Audi	A8	Europe	1,38	39	Automobile	62	4,2	310	113	74	198,2	3,902	23,7	21
+BMW	323i	Europe	19,747	 	Automobile	26,99	2,5	170	107,3	68,4	176	3,179	16,6	26,1
+BMW	328i	Europe	9,231	28,675	Automobile	33,4	2,8	193	107,3	68,5	176	3,197	16,6	24
+BMW	528i	Europe	17,527	36,125	Automobile	38,9	2,8	193	111,4	70,9	188	3,472	18,5	24,8
+Buick	Century	USA	91,561	12,475	Automobile	21,975	3,1	175	109	72,7	194,6	3,368	17,5	25
+Buick	Regal	USA	39,35	13,74	Automobile	25,3	3,8	240	109	72,7	196,2	3,543	17,5	23
+Buick	Park Avenue	USA	27,851	20,19	Automobile	31,965	3,8	205	113,8	74,7	206,8	3,778	18,5	24
+Buick	LeSabre	USA	83,257	13,36	Automobile	27,885	3,8	205	112,2	73,5	200	3,591	17,5	25
+Cadillac	DeVille	USA	63,729	22,525	Automobile	39,895	4,6	275	115,3	74,5	207,2	3,978	18,5	22
+Cadillac	Seville	USA	15,943	27,1	Automobile	44,475	4,6	275	112,2	75	201	 	18,5	22
+Cadillac	Eldorado	USA	6,536	25,725	Automobile	39,665	4,6	275	108	75,5	200,6	3,843	19	22
+Cadillac	Catera	USA	11,185	18,225	Automobile	31,01	3	200	107,4	70,3	194,8	3,77	18	22
+Cadillac	Escalade	USA	14,785	 	Truck	46,225	5,7	255	117,5	77	201,2	5,572	30	15
+Chevrolet	Cavalier	USA	145,519	9,25	Automobile	13,26	2,2	115	104,1	67,9	180,9	2,676	14,3	27
+Chevrolet	Malibu	USA	135,126	11,225	Automobile	16,535	3,1	170	107	69,4	190,4	3,051	15	25
+Chevrolet	Lumina	USA	24,629	10,31	Automobile	18,89	3,1	175	107,5	72,5	200,9	3,33	16,6	25
+Chevrolet	Monte Carlo	USA	42,593	11,525	Automobile	19,39	3,4	180	110,5	72,7	197,9	3,34	17	27
+Chevrolet	Camaro	USA	26,402	13,025	Automobile	24,34	3,8	200	101,1	74,1	193,2	3,5	16,8	25
+Chevrolet	Corvette	USA	17,947	36,225	Automobile	45,705	5,7	345	104,5	73,6	179,7	3,21	19,1	22
+Chevrolet	Prizm	USA	32,299	9,125	Automobile	13,96	1,8	120	97,1	66,7	174,3	2,398	13,2	33
+Chevrolet	Metro	USA	21,855	5,16	Automobile	9,235	1	55	93,1	62,6	149,4	1,895	10,3	45
+Chevrolet	Impala	USA	107,995	 	Automobile	18,89	3,4	180	110,5	73	200	3,389	17	27
+Chrysler	Sebring Coupe	USA	7,854	12,36	Automobile	19,84	2,5	163	103,7	69,7	190,9	2,967	15,9	24
+Chrysler	Sebring Conv.	USA	32,775	14,18	Automobile	24,495	2,5	168	106	69,2	193	3,332	16	24
+Chrysler	Concorde	USA	31,148	13,725	Automobile	22,245	2,7	200	113	74,4	209,1	3,452	17	26
+Chrysler	Cirrus	USA	32,306	12,64	Automobile	16,48	2	132	108	71	186	2,911	16	27
+Chrysler	LHS	USA	13,462	17,325	Automobile	28,34	3,5	253	113	74,4	207,7	3,564	17	23
+Chrysler	Town & Country	USA	53,48	19,54	Truck	 	 	 	 	 	 	 	 	 
+Chrysler	300M	USA	30,696	 	Automobile	29,185	3,5	253	113	74,4	197,8	3,567	17	23
+Dodge	Neon	USA	76,034	7,75	Automobile	12,64	2	132	105	74,4	174,4	2,567	12,5	29
+Dodge	Avenger	USA	4,734	12,545	Automobile	19,045	2,5	163	103,7	69,1	190,2	2,879	15,9	24
+Dodge	Stratus	USA	71,186	10,185	Automobile	20,23	2,5	168	108	71	186	3,058	16	24
+Dodge	Intrepid	USA	88,028	12,275	Automobile	22,505	2,7	202	113	74,7	203,7	3,489	17	 
+Dodge	Viper	USA	0,916	58,47	Automobile	69,725	8	450	96,2	75,7	176,7	3,375	19	16
+Dodge	Ram Pickup	USA	227,061	15,06	Truck	19,46	5,2	230	138,7	79,3	224,2	4,47	26	17
+Dodge	Ram Wagon	USA	16,767	15,51	Truck	21,315	3,9	175	109,6	78,8	192,6	4,245	32	15
+Dodge	Ram Van	USA	31,038	13,425	Truck	18,575	3,9	175	127,2	78,8	208,5	4,298	32	16
+Dodge	Dakota	USA	111,313	11,26	Truck	16,98	2,5	120	131	71,5	215	3,557	22	19
+Dodge	Durango	USA	101,323	 	Truck	26,31	5,2	230	115,7	71,7	193,5	4,394	25	17
+Dodge	Caravan	USA	181,749	12,025	Truck	19,565	2,4	150	113,3	76,8	186,3	3,533	20	24
+Ford	Escort	USA	70,227	7,425	Automobile	12,07	2	110	98,4	67	174,7	2,468	12,7	30
+Ford	Mustang	USA	113,369	12,76	Automobile	21,56	3,8	190	101,3	73,1	183,2	3,203	15,7	24
+Ford	Contour	USA	35,068	8,835	Automobile	17,035	2,5	170	106,5	69,1	184,6	2,769	15	25
+Ford	Taurus	USA	245,815	10,055	Automobile	17,885	3	155	108,5	73	197,6	3,368	16	24
+Ford	Focus	USA	175,67	 	Automobile	12,315	2	107	103	66,9	174,8	2,564	13,2	30
+Ford	Crown Victoria	USA	63,403	14,21	Automobile	22,195	4,6	200	114,7	78,2	212	3,908	19	21
+Ford	Explorer	USA	276,747	16,64	Truck	31,93	4	210	111,6	70,2	190,7	3,876	21	19
+Ford	Windstar	USA	155,787	13,175	Truck	21,41	3	150	120,7	76,6	200,9	3,761	26	21
+Ford	Expedition	USA	125,338	23,575	Truck	36,135	4,6	240	119	78,7	204,6	4,808	26	16
+Ford	Ranger	USA	220,65	7,85	Truck	12,05	2,5	119	117,5	69,4	200,7	3,086	20	23
+Ford	F-Series	USA	540,561	15,075	Truck	26,935	4,6	220	138,5	79,1	224,5	4,241	25,1	18
+Honda	Civic	Japan	199,685	9,85	Automobile	12,885	1,6	106	103,2	67,1	175,1	2,339	11,9	32
+Honda	Accord	Japan	230,902	13,21	Automobile	15,35	2,3	135	106,9	70,3	188,8	2,932	17,1	27
+Honda	CR-V	Japan	73,203	17,71	Truck	20,55	2	146	103,2	68,9	177,6	3,219	15,3	24
+Honda	Passport	Japan	12,855	17,525	Truck	26,6	3,2	205	106,4	70,4	178,2	3,857	21,1	19
+Honda	Odyssey	Japan	76,029	19,49	Truck	26	3,5	210	118,1	75,6	201,2	4,288	20	23
+Hyundai	Accent	Japan	41,184	5,86	Automobile	9,699	1,5	92	96,1	65,7	166,7	2,24	11,9	31
+Hyundai	Elantra	Japan	66,692	7,825	Automobile	11,799	2	140	100,4	66,9	174	2,626	14,5	27
+Hyundai	Sonata	Japan	29,45	8,91	Automobile	14,999	2,4	148	106,3	71,6	185,4	3,072	17,2	25
+Infiniti	I30	Japan	23,713	19,69	Automobile	29,465	3	227	108,3	70,2	193,7	3,342	18,5	25
+Jaguar	S-Type	Europe	15,467	 	Automobile	42,8	3	240	114,5	71,6	191,3	3,65	18,4	21
+Jeep	Wrangler	USA	55,557	13,475	Truck	14,46	2,5	120	93,4	66,7	152	3,045	19	17
+Jeep	Cherokee	USA	80,556	13,775	Truck	21,62	4	190	101,4	69,4	167,5	3,194	20	20
+Jeep	Grand Cherokee	USA	157,04	18,81	Truck	26,895	4	195	105,9	72,3	181,5	3,88	20,5	19
+Lexus	ES300	Japan	24,072	26,975	Automobile	31,505	3	210	105,1	70,5	190,2	3,373	18,5	23
+Lexus	GS300	Japan	12,698	32,075	Automobile	37,805	3	225	110,2	70,9	189,2	3,638	19,8	23
+Lexus	GS400	Japan	3,334	 	Automobile	46,305	4	300	110,2	70,9	189,2	3,693	19,8	21
+Lexus	LS400	Japan	6,375	40,375	Automobile	54,005	4	290	112,2	72	196,7	3,89	22,5	22
+Lexus	LX470	Japan	9,126	 	Truck	60,105	4,7	230	112,2	76,4	192,5	5,401	25,4	15
+Lexus	RX300	Japan	51,238	 	Truck	34,605	3	220	103	71,5	180,1	3,9	17,2	21
+Lincoln	Continental	USA	13,798	20,525	Automobile	39,08	4,6	275	109	73,6	208,5	3,868	20	22
+Lincoln	Town car	USA	48,911	21,725	Automobile	43,33	4,6	215	117,7	78,2	215,3	4,121	19	21
+Lincoln	Navigator	USA	22,925	 	Truck	42,66	5,4	300	119	79,9	204,8	5,393	30	15
+Mitsubishi	Mirage	Japan	26,232	8,325	Automobile	13,987	1,8	113	98,4	66,5	173,6	2,25	13,2	30
+Mitsubishi	Eclipse	Japan	42,541	10,395	Automobile	19,047	2,4	154	100,8	68,9	175,4	2,91	15,9	24
+Mitsubishi	Galant	Japan	55,616	10,595	Automobile	17,357	2,4	145	103,7	68,5	187,8	2,945	16,3	25
+Mitsubishi	Diamante	Japan	5,711	16,575	Automobile	24,997	3,5	210	107,1	70,3	194,1	3,443	19	22
+Mitsubishi	3000GT	Japan	0,11	20,94	Automobile	25,45	3	161	97,2	72,4	180,3	3,131	19,8	21
+Mitsubishi	Montero	Japan	11,337	19,125	Truck	31,807	3,5	200	107,3	69,9	186,6	4,52	24,3	18
+Mitsubishi	Montero Sport	Japan	39,348	13,88	Truck	22,527	3	173	107,3	66,7	178,3	3,51	19,5	20
+Mercury	Mystique	USA	14,351	8,8	Automobile	16,24	2	125	106,5	69,1	184,8	2,769	15	28
+Mercury	Cougar	USA	26,529	13,89	Automobile	16,54	2	125	106,4	69,6	185	2,892	16	30
+Mercury	Sable	USA	67,956	11,03	Automobile	19,035	3	153	108,5	73	199,7	3,379	16	24
+Mercury	Grand Marquis	USA	81,174	14,875	Automobile	22,605	4,6	200	114,7	78,2	212	3,958	19	21
+Mercury	Mountaineer	USA	27,609	20,43	Truck	27,56	4	210	111,6	70,2	190,1	3,876	21	18
+Mercury	Villager	USA	20,38	14,795	Truck	22,51	3,3	170	112,2	74,9	194,7	3,944	20	21
+Mercedes-Benz	C-Class	Europe	18,392	26,05	Automobile	31,75	2,3	185	105,9	67,7	177,4	3,25	16,4	26
+Mercedes-Benz	E-Class	Europe	27,602	41,45	Automobile	49,9	3,2	221	111,5	70,8	189,4	3,823	21,1	25
+Mercedes-Benz	S-Class	Europe	16,774	50,375	Automobile	69,7	4,3	275	121,5	73,1	203,1	4,133	23,2	21
+Mercedes-Benz	SL-Class	Europe	3,311	58,6	Automobile	82,6	5	302	99	71,3	177,1	4,125	21,1	20
+Mercedes-Benz	SLK	Europe	7,998	 	Automobile	38,9	2,3	190	94,5	67,5	157,9	3,055	15,9	26
+Mercedes-Benz	SLK230	Europe	1,526	 	Automobile	41	2,3	185	94,5	67,5	157,3	2,975	14	27
+Mercedes-Benz	CLK Coupe	Europe	11,592	 	Automobile	41,6	3,2	215	105,9	67,8	180,3	3,213	16,4	26
+Mercedes-Benz	CL500	Europe	0,954	 	Automobile	85,5	5	302	113,6	73,1	196,6	4,115	23,2	20
+Mercedes-Benz	M-Class	Europe	28,976	 	Truck	35,3	3,2	215	111	72,2	180,6	4,387	19	20
+Nissan	Sentra	Japan	42,643	8,45	Automobile	13,499	1,8	126	99,8	67,3	177,5	2,593	13,2	30
+Nissan	Altima	Japan	88,094	11,295	Automobile	20,39	2,4	155	103,1	69,1	183,5	3,012	15,9	25
+Nissan	Maxima	Japan	79,853	15,125	Automobile	26,249	3	222	108,3	70,3	190,5	3,294	18,5	25
+Nissan	Quest	Japan	27,308	15,38	Truck	26,399	3,3	170	112,2	74,9	194,8	3,991	20	21
+Nissan	Pathfinder	Japan	42,574	17,81	Truck	29,299	3,3	170	106,3	71,7	182,6	3,947	21	19
+Nissan	Xterra	Japan	54,158	 	Truck	22,799	3,3	170	104,3	70,4	178	3,821	19,4	18
+Nissan	Frontier	Japan	65,005	 	Truck	17,89	3,3	170	116,1	66,5	196,1	3,217	19,4	18
+Oldsmobile	Cutlass	USA	1,112	11,24	Automobile	18,145	3,1	150	107	69,4	192	3,102	15,2	25
+Oldsmobile	Intrigue	USA	38,554	 	Automobile	24,15	3,5	215	109	73,6	195,9	3,455	18	 
+Oldsmobile	Alero	USA	80,255	 	Automobile	18,27	2,4	150	107	70,1	186,7	2,958	15	27
+Oldsmobile	Aurora	USA	14,69	19,89	Automobile	36,229	4	250	113,8	74,4	205,4	3,967	18,5	22
+Oldsmobile	Bravada	USA	20,017	19,925	Truck	31,598	4,3	190	107	67,8	181,2	4,068	17,5	19
+Oldsmobile	Silhouette	USA	24,361	15,24	Truck	25,345	3,4	185	120	72,2	201,4	3,948	25	22
+Plymouth	Neon	USA	32,734	7,75	Automobile	12,64	2	132	105	74,4	174,4	2,559	12,5	29
+Plymouth	Breeze	USA	5,24	9,8	Automobile	16,08	2	132	108	71	186,3	2,942	16	27
+Plymouth	Voyager	USA	24,155	12,025	Truck	18,85	2,4	150	113,3	76,8	186,3	3,528	20	24
+Plymouth	Prowler	USA	1,872	 	Automobile	43	3,5	253	113,3	76,3	165,4	2,85	12	21
+Pontiac	Sunfire	USA	51,645	13,79	Automobile	21,61	2,4	150	104,1	68,4	181,9	2,906	15	27
+Pontiac	Grand Am	USA	131,097	10,29	Automobile	19,72	3,4	175	107	70,4	186,3	3,091	15,2	25
+Pontiac	Firebird	USA	19,911	17,805	Automobile	25,31	3,8	200	101,1	74,5	193,4	3,492	16,8	25
+Pontiac	Grand Prix	USA	92,364	14,01	Automobile	21,665	3,8	195	110,5	72,7	196,5	3,396	18	25
+Pontiac	Bonneville	USA	35,945	13,225	Automobile	23,755	3,8	205	112,2	72,6	202,5	3,59	17,5	24
+Pontiac	Montana	USA	39,572	 	Truck	25,635	3,4	185	120	72,7	201,3	3,942	25	23
+Porsche	Boxter	Europe	8,982	41,25	Automobile	41,43	2,7	217	95,2	70,1	171	2,778	17	22
+Porsche	Carrera Coupe	Europe	1,28	60,625	Automobile	71,02	3,4	300	92,6	69,5	174,5	3,032	17	21
+Porsche	Carrera Cabriolet	Europe	1,866	67,55	Automobile	74,97	3,4	300	92,6	69,5	174,5	3,075	17	23
+Saab	09.май	Europe	9,191	 	Automobile	33,12	2,3	170	106,4	70,6	189,2	3,28	18,5	23
+Saab	09.мар	Europe	12,115	 	Automobile	26,1	2	185	102,6	67,4	182,2	2,99	16,9	23
+Saturn	SL	USA	80,62	9,2	Automobile	10,685	1,9	100	102,4	66,4	176,9	2,332	12,1	33
+Saturn	SC	USA	24,546	10,59	Automobile	12,535	1,9	100	102,4	66,4	180	2,367	12,1	33
+Saturn	SW	USA	5,223	10,79	Automobile	14,29	1,9	124	102,4	66,4	176,9	2,452	12,1	31
+Saturn	LW	USA	8,472	 	Automobile	18,835	2,2	137	106,5	69	190,4	3,075	13,1	27
+Saturn	LS	USA	49,989	 	Automobile	15,01	2,2	137	106,5	69	190,4	2,91	13,1	28
+Subaru	Outback	Japan	47,107	 	Automobile	22,695	2,5	165	103,5	67,5	185,8	3,415	16,9	25
+Subaru	Forester	Japan	33,028	 	Truck	20,095	2,5	165	99,4	68,3	175,2	3,125	15,9	24
+Toyota	Corolla	Japan	142,535	10,025	Automobile	13,108	1,8	120	97	66,7	174	2,42	13,2	33
+Toyota	Camry	Japan	247,994	13,245	Automobile	17,518	2,2	133	105,2	70,1	188,5	2,998	18,5	27
+Toyota	Avalon	Japan	63,849	18,14	Automobile	25,545	3	210	107,1	71,7	191,9	3,417	18,5	26
+Toyota	Celica	Japan	33,269	15,445	Automobile	16,875	1,8	140	102,4	68,3	170,5	2,425	14,5	31
+Toyota	Tacoma	Japan	84,087	9,575	Truck	11,528	2,4	142	103,3	66,5	178,7	2,58	15,1	23
+Toyota	Sienna	Japan	65,119	 	Truck	22,368	3	194	114,2	73,4	193,5	3,759	20,9	22
+Toyota	RAV4	Japan	25,106	13,325	Truck	16,888	2	127	94,9	66,7	163,8	2,668	15,3	27
+Toyota	4Runner	Japan	68,411	19,425	Truck	22,288	2,7	150	105,3	66,5	183,3	3,44	18,5	23
+Toyota	Land Cruiser	Japan	9,835	34,08	Truck	51,728	4,7	230	112,2	76,4	192,5	5,115	25,4	15
+Volkswagen	Golf	Europe	9,761	11,425	Automobile	14,9	2	115	98,9	68,3	163,3	2,767	14,5	26
+Volkswagen	Jetta	Europe	83,721	13,24	Automobile	16,7	2	115	98,9	68,3	172,3	2,853	14,5	26
+Volkswagen	Passat	Europe	51,102	16,725	Automobile	21,2	1,8	150	106,4	68,5	184,1	3,043	16,4	27
+Volkswagen	Cabrio	Europe	9,569	16,575	Automobile	19,99	2	115	97,4	66,7	160,4	3,079	13,7	26
+Volkswagen	GTI	Europe	5,596	13,76	Automobile	17,5	2	115	98,9	68,3	163,3	2,762	14,6	26
+Volkswagen	Beetle	Europe	49,463	 	Automobile	15,9	2	115	98,9	67,9	161,1	2,769	14,5	26
+Volvo	S40	Europe	16,957	 	Automobile	23,4	1,9	160	100,5	67,6	176,6	2,998	15,8	25
+Volvo	V40	Europe	3,545	 	Automobile	24,4	1,9	160	100,5	67,6	176,6	3,042	15,8	25
+Volvo	S70	Europe	15,245	 	Automobile	27,5	2,4	168	104,9	69,3	185,9	3,208	17,9	25
+Volvo	V70	Europe	17,531	 	Automobile	28,8	2,4	168	104,9	69,3	186,2	3,259	17,9	25
+Volvo	C70	Europe	3,493	 	Automobile	45,5	2,3	236	104,9	71,5	185,7	3,601	18,5	23
+Volvo	S80	Europe	18,969	 	Automobile	36	2,9	201	109,9	72,1	189,8	3,6	21,1	24
