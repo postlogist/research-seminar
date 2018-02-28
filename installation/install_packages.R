@@ -30,6 +30,8 @@ install.packages('Hmisc') #Harrell Miscellaneous contains many functions useful 
 
 install.packages('vtreat') # Data preparation
 
+install.packages('rlist') # List manipulation
+
 ##
 ## Graphics
 ## for ggplot2 extensions - see http://ggplot2-exts.github.io/
