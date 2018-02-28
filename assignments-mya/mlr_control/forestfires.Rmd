@@ -1,0 +1,28 @@
+---
+title: "Прогнозирование площади выгоревшей территории в результате лесного пожара в парке Монтесиньо"
+author: "Здесь должна быть ваша фамилия"
+date: '27 февраля 2018 г '
+output: 
+  html_document: 
+    toc: true
+    toc_float: true
+---
+
+#Описание набора данных
+
+Набор данных [forestfires.csv](data/forestfires.csv) загружен с сайта [data.world](https://data.world/uci/forest-fires/) и содержит информацию о площади выгоревшего леса в парке Монтесиньо (Португалия) и сопутствовавших метеорологических условиях. Набор данных подготовлен сотрудниками Университета Миньо П. Кортезом и А. Морайсом и использован в работе [P. Cortez and A. Morais. A Data Mining Approach to Predict Forest Fires using Meteorological Data. In Proceedings of the 13th EPIA 2007 - Portuguese Conference on Artificial Intelligence, December, 2007.](http://www.dsi.uminho.pt/~pcortez/fires.pdf)
+
+Файл данных имеет следующие поля:  
+- X - пространственная координата территории по оси x на карте парка Монтесиньо;  
+- Y - пространственная координата территории по оси y на карте парка Монтесиньо;  
+- month - месяц;  
+- day - день недели;  
+- FFMC - индекс FFMC (Fine Fuel Moisture Code) из FWI system;  
+- DMC - индекс DMC (Duff Moisture Code) из FWI system;   
+- DC - индекс DC (Drought Code) из FWI system;  
+- ISI - индекс ISI (Initial Spread Index) из FWI system;  
+- temp - температура воздуха в градусах по Цельсию;
+- RH - относительная влажность в процентах;  
+- wind - скорость ветра в км/ч;   
+- rain - выпадение осадков в мм/м2;   
+- area - площадь выгоревшей территории леса в га (поскольку переменная имеет ассиментричное распределение имеет смысл произвести логарифмическое преобразование).  
