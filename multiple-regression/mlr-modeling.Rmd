@@ -1,7 +1,7 @@
 ---
 title: "Множественная регрессия: построение и интепретация моделей"
 author: "Заходякин Г.В., postlogist@gmail.com"
-date: "14.02.2017"
+date: '`r format(Sys.time(), "%d.%m.%Y")`'
 output: html_document
 ---
 
@@ -295,7 +295,7 @@ predict(m_wgtpow, newcar, interval = 'prediction', level = 0.9 )
 
 ```{r Соответствие прогноза и факта для модели с весом и мощностью}
 
-ggplot(add_predictions(cars, m_wgtpow, var = 'fit'), 
+ggplot(add_predictions(cars2, m_wgtpow, var = 'fit'), 
        aes(fit, mpg)) +
   geom_point() +
   geom_line(aes(fit, fit), color = 'red', linetype = 'dashed') +
@@ -326,7 +326,7 @@ m_wgtpow_fit <- m_wgtpow %>%
 head(m_wgtpow_fit)
 
 ggplot(m_wgtpow_fit, aes(.fitted, mpg)) +
-  geom_point(aes(size = .cooksd, colour = .hat)) +
+  geom_point(aes(size = .hat, colour = .cooksd)) +
   geom_line(aes(.fitted, .fitted), 
             colour = "red", linetype = "dashed") +
   scale_colour_gradient(low = "black", high = "red") +
@@ -335,7 +335,7 @@ ggplot(m_wgtpow_fit, aes(.fitted, mpg)) +
     mapping = aes(label = model), alpha = 0.25) +
   labs(title = "Влиятельные наблюдения",
        x = "Прогноз mpg", y = "Факт mpg", 
-       colour = "Леверидж", size = "Расстояние Кука")
+       size = "Леверидж",  colour = "Расстояние Кука")
   
 
 ```
@@ -364,7 +364,7 @@ ggplot(cars2, aes(horsepow, mpg, colour = type)) +
 
 
 ```{r Регрессия по мощности с фиктивной переменной для типа машины}
-carsdummy <- cars %>%
+carsdummy <- cars2 %>%
   mutate(truck = ifelse(type == "Truck", 1, 0))
 
 m_pow_dummy <- lm(mpg ~ horsepow + truck, data = carsdummy)
@@ -509,25 +509,30 @@ cars2f <- cars2f %>%
                              Yes = "Europe"))
   
 
-m_europe_interact <- lm(mpg ~ horsepow * europe, 
+m_europe_interact <- lm(mpg ~ horsepow + horsepow:europe, 
                                 data = cars2f)
 
 summary(m_europe_interact)
 ```
 
-Коэффициент для страны получился незначимым, однако взаимодействие страны и мощности значимо.
+Взаимодействие региона и мощности значимо.
 
 Уравнение модели:
 
-$$\widehat{mpg} = 33.4 - 0.05 horsepow - 3.3  (europe=Yes) + 0.02 horsepow (europe=Yes)$$
+$$\widehat{mpg} = 32.7 - 0.05 horsepow - 0.007 horsepow \cdot (europe=Yes)$$
 
 Для американских и японских машин (europe = No):
 
-$$\widehat{mpg} = 33.4 - 0.05 horsepow $$
+$$\widehat{mpg} = 32.7 - 0.05 horsepow $$
 
 Для европейских машин (europe = Yes):
 
-$$\widehat{mpg} = 30.1 - 0.03 horsepow $$
+$$\widehat{mpg} = 32.7 - 0.05 horsepow - 0.007horsepow$$
+
+or:
+
+$$\widehat{mpg} = 32.7 - 0.057 horsepow$$
+
 
 Сравним прогнозируемую эффективность машин с одинаковой мощностью - 250 л.с. из разных стран:
 
@@ -548,4 +553,3 @@ pred_mpg <- predict(m_europe_interact, new_cars,
 pred_mpg
 
 ```
-
