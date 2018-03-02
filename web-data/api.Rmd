@@ -960,4 +960,8 @@ revisions_by_hours %>%
  
  - [Обучающее руководство по работе с пакетом rlist](https://renkun-ken.github.io/rlist-tutorial/)
  
+ - [Самоучитель по XPath на русском языке](http://msiter.ru/tutorials/xpath)
  
+ - Краткое введение в XPath с примерами - [An Introduction to XPath: How to get started](https://blog.scrapinghub.com/2016/10/27/an-introduction-to-xpath-with-examples/)
+ 
+ - Расширение для браузера SelectorGadget для анализа XPath и CSS-селекторов [виньетка](https://cran.r-project.org/web/packages/rvest/vignettes/selectorgadget.html), [сайт проекта](http://selectorgadget.com/), есть расширение для Chrome.
