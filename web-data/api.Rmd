@@ -965,3 +965,7 @@ revisions_by_hours %>%
  - Краткое введение в XPath с примерами - [An Introduction to XPath: How to get started](https://blog.scrapinghub.com/2016/10/27/an-introduction-to-xpath-with-examples/)
  
  - Расширение для браузера SelectorGadget для анализа XPath и CSS-селекторов [виньетка](https://cran.r-project.org/web/packages/rvest/vignettes/selectorgadget.html), [сайт проекта](http://selectorgadget.com/), есть расширение для Chrome.
+ 
+ - Курс Д.А. Храмова [Сбор данных в Internet](http://dkhramov.dp.ua/Stu.WebMining.html)
+ 
+ - Курс Д.А. Храмова [Автоматизация сбора данных в Интернете](http://dkhramov.dp.ua/avtomatizatsiia-sbora-dannykh-v-internete)

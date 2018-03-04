@@ -20,6 +20,7 @@ library(tidyverse) # Манипулирование данными
 library(lubridate) # Обработка дат
 library(xml2) # Обработка XML
 library(rvest) # Обработка HTML-страниц
+library(stringr) # Обработка текстовых строк
 ```
 
 
@@ -314,7 +315,7 @@ vignette('selectorgadget', package='rvest')
 
  - Получение HTML-документа по его адресу - `read_html()`
  - Извлечение нужного элемента из HTML-документа при помощи путей и селекторов - `html_node()` и `html_nodes()`;
- - Преобразование HTML-элемента в текстовые или числовые данные - `html_name()`, `html_attr()`, `html_attrs()`, `html_text()`, `html_children()`, `html_table()`
+ - Преобразование HTML-элемента в текстовые или числовые данные - `html_name()`, `html_attr()`, `html_attrs()`, `html_text()`, `html_table()`
  - Определение и изменение кодировки документа: `guess_encoding()`, `repair_encoding()`.
  
 Кроме того, пакет `rvest` позволяет заполнять формы на сайтах. Это может быть необходимо, если сервер использует для выбора отображаемых на странице данных веб-формы. Также поддерживается работа с сессиями и навигация по сайту. Это необходимо для тех сайтов, где используется авторизация пользователя. В данном блокноте мы не будем рассматривать работу в интерактивном режиме. Если вам необходимо получить данные с такого сайта, то рекомендуем обратиться к книге Дмитрия Храмова "Сбор данных в интернете на языке R", документации на `rvest` или обучающим примерам, перечисленным в списке ресурсов.
@@ -488,7 +489,7 @@ example2 %>% html_nodes(css = "div.block") %>% html_text(trim = TRUE)
 ```{r}
 read_html('example3.html', encoding = 'UTF-8') %>%
   html_node(css = "table") %>%
-  html_table()
+  html_table() %>% knitr::kable()
 ```
 
 
@@ -660,7 +661,7 @@ station_coord %>% head() %>% knitr::kable()
 Глубина залегания станций содержит лишние символы - единицы измерения, а также вместо знаков минус там используются дефисы. Вместо точки десятичным разделителем является запятая. Это приводит к тому, что данные неправильно преобразуются в числа.
 
 ```{r}
-metro_table %>% select(depth) %>% head(9)
+metro_table %>% select(depth) %>% head(9) %>% knitr::kable()
 
 metro_table$depth %>%  head(9)
 ```
@@ -757,10 +758,31 @@ metro_cleaned %>%
  
  - [Пример сбора данных о ставках аренды складов в Московском регионе по данным cian.ru](https://github.com/makorovin/R-/blob/master/scraping/ScrapR.Rmd)
  
+ - Курс Д.А. Храмова [Сбор данных в Internet](http://dkhramov.dp.ua/Stu.WebMining.html)
+ 
+ - Курс Д.А. Храмова [Автоматизация сбора данных в Интернете](http://dkhramov.dp.ua/avtomatizatsiia-sbora-dannykh-v-internete)
+ 
  - [Здесь можно купить электронную версию книги Д.А.Храмова о сборе данных из Интернета при помощи R со скидкой](https://www.litres.ru/pages/biblio_book/?action=do_user_ref_discount&art=22968330&lfrom=894012&ref_key=a401b58d79bd0b3ae7baeff9555fab549e999f944e7298caca42aac039269cdb)
  
- - [Пример скрейпинга сайтов при помощи R](https://rpubs.com/ryanthomas/webscraping-with-rvest)
- - [Еще пример](https://stat4701.github.io/edav/2015/04/02/rvest_tutorial/)
- - [Презентация о сборе данных из Интернет с помощью R](https://slides.cpsievert.me/web-scraping/20150612/#1)
+ - [Пример скрейпинга сайтов при помощи R](https://rpubs.com/ryanthomas/webscraping-with-rvest)  
+ 
+ - [Еще пример](https://stat4701.github.io/edav/2015/04/02/rvest_tutorial/)   
+ 
+ - [Презентация о сборе данных из Интернет с помощью R](https://slides.cpsievert.me/web-scraping/20150612/#1)  
+ 
+ - Обработка текстовых строк в R - [глава 14](http://r4ds.had.co.nz/strings.html) из книги R for Data Science  
+ 
+ - Бородин Б. [Как новичку разобраться в регулярных выражениях](https://netpeak.net/ru/blog/kak-novichku-razobratsya-v-regulyarnyh-vyrazheniyah/)
+ 
+ - [Регулярные выражения для новичков](https://tproger.ru/articles/regexp-for-beginners/)  
+ 
+ - Интерактивный самоучитель по регулярным выражениям - [RegexOne](https://regexone.com/lesson/introduction_abcs)
+ 
+ - Онлайн-редактор регулярных выражений с функцией проверки - [Regular Expressions 101](https://regex101.com/)
+ 
+ 
+ 
+ 
+ 
  
  
