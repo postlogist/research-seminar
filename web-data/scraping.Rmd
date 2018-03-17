@@ -764,6 +764,10 @@ metro_cleaned %>%
  
  - [Здесь можно купить электронную версию книги Д.А.Храмова о сборе данных из Интернета при помощи R со скидкой](https://www.litres.ru/pages/biblio_book/?action=do_user_ref_discount&art=22968330&lfrom=894012&ref_key=a401b58d79bd0b3ae7baeff9555fab549e999f944e7298caca42aac039269cdb)
  
+ - [Пример скрейпинга при помощи R: анализ фальшивых отзывов](https://www.datacamp.com/community/tutorials/r-web-scraping-rvest)
+ 
+  - [Видеозапись мастер-класса Алексея Кнорре по сбору и анализу данных правовой статистики в РФ на дне открытых данных](https://youtu.be/txLWrhfpFKY?t=2h38m18s)
+
  - [Пример скрейпинга сайтов при помощи R](https://rpubs.com/ryanthomas/webscraping-with-rvest)  
  
  - [Еще пример](https://stat4701.github.io/edav/2015/04/02/rvest_tutorial/)   
