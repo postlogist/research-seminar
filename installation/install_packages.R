@@ -180,6 +180,10 @@ install.packages("vars") #also installing the dependency ‘strucchange’
 
 install.packages("changepoint")
 
+install.packages("sweep") # Tools for embedding time series into tidyverse
+#also installs timetk
+
+
 ##
 ## Output
 ##
@@ -209,6 +213,21 @@ install.packages("caret")
 # and install modeling packages later, as needed.
 
 # install.packages("mlr") # - use if installation of dependencies fails
+
+
+# packages required for MLR
+install.packages("R.rsp")
+install.packages("fastmatch")
+install.packages("inum")
+#install.packages("stopf")
+
+#install.packages("elmNN") #not available for R 3.5.1
+#install.packages("lqa") #not available for R 3.5.1
+
+# CRAN version of MLR is broken. Must use development version from Github
+# It requires compilation, so by default the CRAN version is installed
+# Uncomment and run this line to install the development version:
+#devtools::install_github("mlr-org/mlr", dependencies = c("Depends", "Suggests"))
 
 install.packages("mlr", dependencies = c("Depends", "Suggests")) # machine learning framework
 # also installing dependencies:
@@ -247,7 +266,6 @@ install.packages("mlr", dependencies = c("Depends", "Suggests")) # machine learn
 # penalized, pls, PMCMR, randomForest, randomForestSRC, ranger, Rfast, rFerns,
 # rknn, rotationForest, RRF, rrlda, rsm, RSNNS, RWeka, sda, smoof, sparsediscrim,
 # sparseLDA, stepPlr, SwarmSVM, svglite, testthat, tgp, xgboost
-
 
 
 install.packages("RWekajars")
@@ -349,6 +367,8 @@ install.packages('DBI') # database connectivity interface
 
 install.packages('RSQLite') # database connectivity
 # also installing the dependencies ‘bit’, ‘bit64’, ‘blob’
+
+install.packages("docxtractr") # extract data from word
 
 # Excluded:
 # install.packages('xlsx') #Read, write, format Excel 2007 and Excel 97/2000/XP/2003 files
