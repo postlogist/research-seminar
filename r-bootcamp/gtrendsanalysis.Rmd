@@ -1,7 +1,7 @@
 ---
 title: "Анализ популярности запросов с помощью Google Trends"
 author: "Морозова Ю.А."
-date: '31 августа 2017 г '
+date: '06 сентября 2018 г '
 output: html_document
 ---
 
@@ -23,7 +23,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r Загрузка пакета gtrendsR}
 
-# devtools::install_github('PMassicotte/gtrendsR')
+ #devtools::install_github('PMassicotte/gtrendsR')
 
 ```
 
@@ -38,7 +38,7 @@ library(stringr) # пакет для работы со строками
 ```
 
 ## Загрузка данных с сайта Google Trends
-Для загрузки данных используется функция `gtrends()`, основным параметром которой является `keyword` - вектор ключевых слов, по которым осуществляются запросы. Другие параметры: `geo` - вектор регионов, которые включаются в запрос, `time`- временной период, `gprop` - google продукты, для которых будет выполнен запрос ("web", "news", "images", "froogle", "youtube"). Более подробно о функции можно почесть в справочной системе R, набрав в строке ввода `?gtrends`. Например, для получения динамики популярности запросов "data scientist", "data science" и "R programming" за весь доступный период (с 2004 года) напишем следующий код:
+Для загрузки данных используется функция `gtrends()`, основным параметром которой является `keyword` - вектор ключевых слов, по которым осуществляются запросы. Другие параметры: `geo` - вектор регионов, которые включаются в запрос, `time`- временной период, `gprop` - google продукты, для которых будет выполнен запрос ("web", "news", "images", "froogle", "youtube"). Более подробно о функции можно почесть в справочной системе R, набрав в строке ввода `?gtrends`. Например, для получения динамики популярности запросов "data scientist", "data science" и "R programming" за последние 5 лет напишем следующий код:
 
 ```{r Загрузка данных}
 dtrend <- gtrends(c("data scientist", "data science", "R programming"), time = "today+5-y")
@@ -66,13 +66,13 @@ ggplot(data=interest_over_time) +
 
 Как можно наблюдать на графике, популярность "data scientist", "data science" и "R programming" растет стремительно, особенно в последние 5 лет.
 
-Второй элемент списка `dtrend$interest_by_region` содержит распределение популярности ключевых слов по регионам. Найдем 10-ку лидеров по популярности каждого из ключевых слов:
+Второй элемент списка `dtrend$interest_by_country` содержит распределение популярности ключевых слов по странам. Найдем 10-ку лидеров по популярности каждого из ключевых слов:
 
 ```{r Регионы-лидеры по популярности}
-interest_by_region <- dtrend$interest_by_region
+interest_by_country <- dtrend$interest_by_country
 
-plot_top10_regions <- function(x){
-top10_regions <- interest_by_region %>% 
+plot_top10_countries <- function(x){
+top10_regions <- interest_by_country %>% 
                       filter(keyword==x) %>% 
                       group_by(location) %>%
                       summarise(hits=sum(hits)) %>%
@@ -84,11 +84,11 @@ top10_regions <- top10_regions %>%
 ggplot(top10_regions) + 
   geom_bar(aes(x=location, y=hits, fill=location), stat="identity", show.legend = FALSE) + 
   coord_flip() +
-  labs(title=str_c("10-ка регионов-лидеров по популярности ", x))
+  labs(title=str_c("10-ка стран-лидеров по популярности ", x))
 }
-plot_top10_regions("data scientist")
-plot_top10_regions("data science")
-plot_top10_regions("R programming")
+plot_top10_countries("data scientist")
+plot_top10_countries("data science")
+plot_top10_countries("R programming")
 
 ```
 
