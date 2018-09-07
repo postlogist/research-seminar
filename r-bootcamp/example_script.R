@@ -13,11 +13,8 @@
 
 
 # Внимание! Перед запуском скрипта надо выбрать рабочую директорию.
-# Рекомендуем использовать рабочий стол.
-# В RStudio: Session>Set Working Directory
-
-# Программно:
-# setwd("C:/Users/Student/Desktop") #поменяйте путь к своему рабочему столу 
+# Рекомендуем использовать папку, в которой находится этот скрипт.
+# В RStudio: Session>Set Working Directory>To Source File Location
 
 
 # Загрузка пакетов

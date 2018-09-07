@@ -1,7 +1,7 @@
 ---
 title: "Пример блокнота Rmarkdown"
 author: "Заходякин Г.В., postlogist@gmail.com"
-date: "05.09.2017"
+date: "07.09.2018"
 output: 
   html_document: 
     toc: true
