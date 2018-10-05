@@ -1,7 +1,7 @@
 ---
 title: "Визуализация данных с помощью ggplot2, часть 2"
 author: Заходякин Г.В., postlogist@gmail.com
-date: 2017-09-27
+date: 2018-09-04
 output: 
   html_document: 
     toc: true
@@ -491,7 +491,8 @@ ggplot(data = mpg,
                              .desc = TRUE), 
              y = hwy)) +
   
-  stat_summary(fun.y = 'mean', geom = 'bar')
+  stat_summary(fun.y = 'mean', geom = 'bar') +
+  labs(x = 'class')
   
 ```
 
