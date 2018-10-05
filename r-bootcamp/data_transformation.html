@@ -94,6 +94,9 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
 }
@@ -262,24 +265,24 @@ head(mpg)</code></pre>
 <pre><code>## # A tibble: 6 x 11
 ##   manufacturer model displ  year   cyl trans drv     cty   hwy fl    class
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt;
-## 1 audi         a4     1.80  1999     4 auto~ f        18    29 p     comp~
-## 2 audi         a4     1.80  1999     4 manu~ f        21    29 p     comp~
-## 3 audi         a4     2.00  2008     4 manu~ f        20    31 p     comp~
-## 4 audi         a4     2.00  2008     4 auto~ f        21    30 p     comp~
-## 5 audi         a4     2.80  1999     6 auto~ f        16    26 p     comp~
-## 6 audi         a4     2.80  1999     6 manu~ f        18    26 p     comp~</code></pre>
+## 1 audi         a4      1.8  1999     4 auto~ f        18    29 p     comp~
+## 2 audi         a4      1.8  1999     4 manu~ f        21    29 p     comp~
+## 3 audi         a4      2    2008     4 manu~ f        20    31 p     comp~
+## 4 audi         a4      2    2008     4 auto~ f        21    30 p     comp~
+## 5 audi         a4      2.8  1999     6 auto~ f        16    26 p     comp~
+## 6 audi         a4      2.8  1999     6 manu~ f        18    26 p     comp~</code></pre>
 <pre class="r"><code>head(
   select(mpg, manufacturer, model, displ, trans, cty) #отбор 5 столбцов
 )</code></pre>
 <pre><code>## # A tibble: 6 x 5
 ##   manufacturer model displ trans        cty
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;int&gt;
-## 1 audi         a4     1.80 auto(l5)      18
-## 2 audi         a4     1.80 manual(m5)    21
-## 3 audi         a4     2.00 manual(m6)    20
-## 4 audi         a4     2.00 auto(av)      21
-## 5 audi         a4     2.80 auto(l5)      16
-## 6 audi         a4     2.80 manual(m5)    18</code></pre>
+## 1 audi         a4      1.8 auto(l5)      18
+## 2 audi         a4      1.8 manual(m5)    21
+## 3 audi         a4      2   manual(m6)    20
+## 4 audi         a4      2   auto(av)      21
+## 5 audi         a4      2.8 auto(l5)      16
+## 6 audi         a4      2.8 manual(m5)    18</code></pre>
 <p>Благодаря тому, что на входе и выходе каждой функции используются таблицы, “глаголы”, преобразующие данные, можно выстраивать в своеобразные “предложения” - цепочки, описывающие, как получить желаемый результат.</p>
 <div class="figure">
 <img src="data:image/png;base64,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" alt="Предложение, составленное из глаголов dplyr" />
@@ -335,22 +338,23 @@ head(mpg)</code></pre>
 <h3>Пример 1. Отбор по сочетанию условий</h3>
 <p>Отобрать все машины с задним приводом и 6-цилиндровым двигателем.</p>
 <pre class="r"><code>filter(mpg, drv == 'r' &amp; cyl == 6)</code></pre>
+<pre><code>## Warning: package 'bindrcpp' was built under R version 3.5.1</code></pre>
 <pre><code>## # A tibble: 4 x 11
 ##   manufacturer model displ  year   cyl trans drv     cty   hwy fl    class
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt;
-## 1 ford         must~  3.80  1999     6 manu~ r        18    26 r     subc~
-## 2 ford         must~  3.80  1999     6 auto~ r        18    25 r     subc~
-## 3 ford         must~  4.00  2008     6 manu~ r        17    26 r     subc~
-## 4 ford         must~  4.00  2008     6 auto~ r        16    24 r     subc~</code></pre>
+## 1 ford         must~   3.8  1999     6 manu~ r        18    26 r     subc~
+## 2 ford         must~   3.8  1999     6 auto~ r        18    25 r     subc~
+## 3 ford         must~   4    2008     6 manu~ r        17    26 r     subc~
+## 4 ford         must~   4    2008     6 auto~ r        16    24 r     subc~</code></pre>
 <pre class="r"><code># или так:
 filter(mpg, drv == 'r', cyl == 6)</code></pre>
 <pre><code>## # A tibble: 4 x 11
 ##   manufacturer model displ  year   cyl trans drv     cty   hwy fl    class
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt;
-## 1 ford         must~  3.80  1999     6 manu~ r        18    26 r     subc~
-## 2 ford         must~  3.80  1999     6 auto~ r        18    25 r     subc~
-## 3 ford         must~  4.00  2008     6 manu~ r        17    26 r     subc~
-## 4 ford         must~  4.00  2008     6 auto~ r        16    24 r     subc~</code></pre>
+## 1 ford         must~   3.8  1999     6 manu~ r        18    26 r     subc~
+## 2 ford         must~   3.8  1999     6 auto~ r        18    25 r     subc~
+## 3 ford         must~   4    2008     6 manu~ r        17    26 r     subc~
+## 4 ford         must~   4    2008     6 auto~ r        16    24 r     subc~</code></pre>
 </div>
 <div id="-2.---------" class="section level3">
 <h3>Пример 2. Отбор по вхождению в множество и сравнение действительных чисел</h3>
@@ -372,11 +376,11 @@ near(sqrt(2)^2, 2)</code></pre>
 <pre><code>## # A tibble: 5 x 11
 ##   manufacturer model displ  year   cyl trans drv     cty   hwy fl    class
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt;
-## 1 honda        civic  1.80  2008     4 auto~ f        25    36 r     subc~
-## 2 honda        civic  1.80  2008     4 auto~ f        24    36 c     subc~
-## 3 toyota       coro~  1.80  1999     4 auto~ f        24    30 r     comp~
-## 4 toyota       coro~  1.80  1999     4 auto~ f        24    33 r     comp~
-## 5 toyota       coro~  1.80  2008     4 auto~ f        26    35 r     comp~</code></pre>
+## 1 honda        civic   1.8  2008     4 auto~ f        25    36 r     subc~
+## 2 honda        civic   1.8  2008     4 auto~ f        24    36 c     subc~
+## 3 toyota       coro~   1.8  1999     4 auto~ f        24    30 r     comp~
+## 4 toyota       coro~   1.8  1999     4 auto~ f        24    33 r     comp~
+## 5 toyota       coro~   1.8  2008     4 auto~ f        26    35 r     comp~</code></pre>
 </div>
 <div id="-3.----" class="section level3">
 <h3>Пример 3. Отбор по вычисляемому условию</h3>
@@ -386,14 +390,14 @@ near(sqrt(2)^2, 2)</code></pre>
 <pre><code>## # A tibble: 8 x 11
 ##   manufacturer model displ  year   cyl trans drv     cty   hwy fl    class
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt;
-## 1 honda        civic  1.60  1999     4 manu~ f        28    33 r     subc~
-## 2 honda        civic  1.80  2008     4 auto~ f        25    36 r     subc~
-## 3 toyota       coro~  1.80  1999     4 manu~ f        26    35 r     comp~
-## 4 toyota       coro~  1.80  2008     4 manu~ f        28    37 r     comp~
-## 5 toyota       coro~  1.80  2008     4 auto~ f        26    35 r     comp~
-## 6 volkswagen   jetta  1.90  1999     4 manu~ f        33    44 d     comp~
-## 7 volkswagen   new ~  1.90  1999     4 manu~ f        35    44 d     subc~
-## 8 volkswagen   new ~  1.90  1999     4 auto~ f        29    41 d     subc~</code></pre>
+## 1 honda        civic   1.6  1999     4 manu~ f        28    33 r     subc~
+## 2 honda        civic   1.8  2008     4 auto~ f        25    36 r     subc~
+## 3 toyota       coro~   1.8  1999     4 manu~ f        26    35 r     comp~
+## 4 toyota       coro~   1.8  2008     4 manu~ f        28    37 r     comp~
+## 5 toyota       coro~   1.8  2008     4 auto~ f        26    35 r     comp~
+## 6 volkswagen   jetta   1.9  1999     4 manu~ f        33    44 d     comp~
+## 7 volkswagen   new ~   1.9  1999     4 manu~ f        35    44 d     subc~
+## 8 volkswagen   new ~   1.9  1999     4 auto~ f        29    41 d     subc~</code></pre>
 <p><strong>Замечание:</strong> в качестве условия отбора можно использовать любое выражение, которое возвращает <code>TRUE</code> или <code>FALSE</code> для каждой строки обрабатываемой таблицы.</p>
 </div>
 </div>
@@ -405,12 +409,12 @@ head(flights)</code></pre>
 <pre><code>## # A tibble: 6 x 19
 ##    year month   day dep_time sched_dep_time dep_delay arr_time
 ##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
-## 1  2013     1     1      517            515        2.      830
-## 2  2013     1     1      533            529        4.      850
-## 3  2013     1     1      542            540        2.      923
-## 4  2013     1     1      544            545       -1.     1004
-## 5  2013     1     1      554            600       -6.      812
-## 6  2013     1     1      554            558       -4.      740
+## 1  2013     1     1      517            515         2      830
+## 2  2013     1     1      533            529         4      850
+## 3  2013     1     1      542            540         2      923
+## 4  2013     1     1      544            545        -1     1004
+## 5  2013     1     1      554            600        -6      812
+## 6  2013     1     1      554            558        -4      740
 ## # ... with 12 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;,
 ## #   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
 ## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
@@ -482,12 +486,12 @@ head(flights)</code></pre>
 <pre><code>## # A tibble: 6 x 11
 ##   manufacturer model displ  year   cyl trans drv     cty   hwy fl    class
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt;
-## 1 audi         a4     1.80  1999     4 auto~ f        18    29 p     comp~
-## 2 audi         a4     1.80  1999     4 manu~ f        21    29 p     comp~
-## 3 audi         a4     2.00  2008     4 manu~ f        20    31 p     comp~
-## 4 audi         a4     2.00  2008     4 auto~ f        21    30 p     comp~
-## 5 audi         a4     2.80  1999     6 auto~ f        16    26 p     comp~
-## 6 audi         a4     2.80  1999     6 manu~ f        18    26 p     comp~</code></pre>
+## 1 audi         a4      1.8  1999     4 auto~ f        18    29 p     comp~
+## 2 audi         a4      1.8  1999     4 manu~ f        21    29 p     comp~
+## 3 audi         a4      2    2008     4 manu~ f        20    31 p     comp~
+## 4 audi         a4      2    2008     4 auto~ f        21    30 p     comp~
+## 5 audi         a4      2.8  1999     6 auto~ f        16    26 p     comp~
+## 6 audi         a4      2.8  1999     6 manu~ f        18    26 p     comp~</code></pre>
 <div id="-1.-----" class="section level3">
 <h3>Пример 1. Перечисление столбцов и смежные столбцы</h3>
 <pre class="r"><code>head(
@@ -496,12 +500,12 @@ head(flights)</code></pre>
 <pre><code>## # A tibble: 6 x 5
 ##   manufacturer model displ trans        cty
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;int&gt;
-## 1 audi         a4     1.80 auto(l5)      18
-## 2 audi         a4     1.80 manual(m5)    21
-## 3 audi         a4     2.00 manual(m6)    20
-## 4 audi         a4     2.00 auto(av)      21
-## 5 audi         a4     2.80 auto(l5)      16
-## 6 audi         a4     2.80 manual(m5)    18</code></pre>
+## 1 audi         a4      1.8 auto(l5)      18
+## 2 audi         a4      1.8 manual(m5)    21
+## 3 audi         a4      2   manual(m6)    20
+## 4 audi         a4      2   auto(av)      21
+## 5 audi         a4      2.8 auto(l5)      16
+## 6 audi         a4      2.8 manual(m5)    18</code></pre>
 </div>
 <div id="-2.--" class="section level3">
 <h3>Пример 2. Исключение столбцов</h3>
@@ -542,12 +546,12 @@ head(flights)</code></pre>
 <pre><code>## # A tibble: 6 x 11
 ##     cty   hwy manufacturer model displ  year   cyl trans drv   fl    class
 ##   &lt;int&gt; &lt;int&gt; &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
-## 1    18    29 audi         a4     1.80  1999     4 auto~ f     p     comp~
-## 2    21    29 audi         a4     1.80  1999     4 manu~ f     p     comp~
-## 3    20    31 audi         a4     2.00  2008     4 manu~ f     p     comp~
-## 4    21    30 audi         a4     2.00  2008     4 auto~ f     p     comp~
-## 5    16    26 audi         a4     2.80  1999     6 auto~ f     p     comp~
-## 6    18    26 audi         a4     2.80  1999     6 manu~ f     p     comp~</code></pre>
+## 1    18    29 audi         a4      1.8  1999     4 auto~ f     p     comp~
+## 2    21    29 audi         a4      1.8  1999     4 manu~ f     p     comp~
+## 3    20    31 audi         a4      2    2008     4 manu~ f     p     comp~
+## 4    21    30 audi         a4      2    2008     4 auto~ f     p     comp~
+## 5    16    26 audi         a4      2.8  1999     6 auto~ f     p     comp~
+## 6    18    26 audi         a4      2.8  1999     6 manu~ f     p     comp~</code></pre>
 </div>
 </div>
 <div id="-select" class="section level2">
@@ -557,12 +561,12 @@ head(flights)</code></pre>
 <pre><code>## # A tibble: 6 x 19
 ##    year month   day dep_time sched_dep_time dep_delay arr_time
 ##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
-## 1  2013     1     1      517            515        2.      830
-## 2  2013     1     1      533            529        4.      850
-## 3  2013     1     1      542            540        2.      923
-## 4  2013     1     1      544            545       -1.     1004
-## 5  2013     1     1      554            600       -6.      812
-## 6  2013     1     1      554            558       -4.      740
+## 1  2013     1     1      517            515         2      830
+## 2  2013     1     1      533            529         4      850
+## 3  2013     1     1      542            540         2      923
+## 4  2013     1     1      544            545        -1     1004
+## 5  2013     1     1      554            600        -6      812
+## 6  2013     1     1      554            558        -4      740
 ## # ... with 12 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;,
 ## #   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
 ## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
@@ -583,19 +587,18 @@ head(flights)</code></pre>
   arrange(mpg, desc(cty)),
   n = 10)</code></pre>
 <pre><code>## # A tibble: 10 x 11
-##    manufacturer model    displ  year   cyl trans   drv     cty   hwy fl   
-##    &lt;chr&gt;        &lt;chr&gt;    &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;   &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;
-##  1 volkswagen   new bee~  1.90  1999     4 manual~ f        35    44 d    
-##  2 volkswagen   jetta     1.90  1999     4 manual~ f        33    44 d    
-##  3 volkswagen   new bee~  1.90  1999     4 auto(l~ f        29    41 d    
-##  4 honda        civic     1.60  1999     4 manual~ f        28    33 r    
-##  5 toyota       corolla   1.80  2008     4 manual~ f        28    37 r    
-##  6 honda        civic     1.80  2008     4 manual~ f        26    34 r    
-##  7 toyota       corolla   1.80  1999     4 manual~ f        26    35 r    
-##  8 toyota       corolla   1.80  2008     4 auto(l~ f        26    35 r    
-##  9 honda        civic     1.60  1999     4 manual~ f        25    32 r    
-## 10 honda        civic     1.80  2008     4 auto(l~ f        25    36 r    
-## # ... with 1 more variable: class &lt;chr&gt;</code></pre>
+##    manufacturer model displ  year   cyl trans drv     cty   hwy fl    cla~
+##    &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;ch&gt;
+##  1 volkswagen   new ~   1.9  1999     4 manu~ f        35    44 d     sub~
+##  2 volkswagen   jetta   1.9  1999     4 manu~ f        33    44 d     com~
+##  3 volkswagen   new ~   1.9  1999     4 auto~ f        29    41 d     sub~
+##  4 honda        civic   1.6  1999     4 manu~ f        28    33 r     sub~
+##  5 toyota       coro~   1.8  2008     4 manu~ f        28    37 r     com~
+##  6 honda        civic   1.8  2008     4 manu~ f        26    34 r     sub~
+##  7 toyota       coro~   1.8  1999     4 manu~ f        26    35 r     com~
+##  8 toyota       coro~   1.8  2008     4 auto~ f        26    35 r     com~
+##  9 honda        civic   1.6  1999     4 manu~ f        25    32 r     sub~
+## 10 honda        civic   1.8  2008     4 auto~ f        25    36 r     sub~</code></pre>
 </div>
 <div id="-2.----" class="section level3">
 <h3>Пример 2. Сортировка по нескольким столбцам</h3>
@@ -604,19 +607,19 @@ head(flights)</code></pre>
   arrange(mpg, manufacturer, desc(cty)),
   n = 30)</code></pre>
 <pre><code>## # A tibble: 30 x 11
-##    manufacturer model    displ  year   cyl trans   drv     cty   hwy fl   
-##    &lt;chr&gt;        &lt;chr&gt;    &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;   &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;
-##  1 audi         a4        1.80  1999     4 manual~ f        21    29 p    
-##  2 audi         a4        2.00  2008     4 auto(a~ f        21    30 p    
-##  3 audi         a4        2.00  2008     4 manual~ f        20    31 p    
-##  4 audi         a4 quat~  2.00  2008     4 manual~ 4        20    28 p    
-##  5 audi         a4 quat~  2.00  2008     4 auto(s~ 4        19    27 p    
-##  6 audi         a4        1.80  1999     4 auto(l~ f        18    29 p    
-##  7 audi         a4        2.80  1999     6 manual~ f        18    26 p    
-##  8 audi         a4        3.10  2008     6 auto(a~ f        18    27 p    
-##  9 audi         a4 quat~  1.80  1999     4 manual~ 4        18    26 p    
-## 10 audi         a4 quat~  2.80  1999     6 manual~ 4        17    25 p    
-## # ... with 20 more rows, and 1 more variable: class &lt;chr&gt;</code></pre>
+##    manufacturer model displ  year   cyl trans drv     cty   hwy fl    cla~
+##    &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;ch&gt;
+##  1 audi         a4      1.8  1999     4 manu~ f        21    29 p     com~
+##  2 audi         a4      2    2008     4 auto~ f        21    30 p     com~
+##  3 audi         a4      2    2008     4 manu~ f        20    31 p     com~
+##  4 audi         a4 q~   2    2008     4 manu~ 4        20    28 p     com~
+##  5 audi         a4 q~   2    2008     4 auto~ 4        19    27 p     com~
+##  6 audi         a4      1.8  1999     4 auto~ f        18    29 p     com~
+##  7 audi         a4      2.8  1999     6 manu~ f        18    26 p     com~
+##  8 audi         a4      3.1  2008     6 auto~ f        18    27 p     com~
+##  9 audi         a4 q~   1.8  1999     4 manu~ 4        18    26 p     com~
+## 10 audi         a4 q~   2.8  1999     6 manu~ 4        17    25 p     com~
+## # ... with 20 more rows</code></pre>
 </div>
 </div>
 <div id="-arrange" class="section level2">
@@ -626,12 +629,12 @@ head(flights)</code></pre>
 <pre><code>## # A tibble: 6 x 19
 ##    year month   day dep_time sched_dep_time dep_delay arr_time
 ##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
-## 1  2013     1     1      517            515        2.      830
-## 2  2013     1     1      533            529        4.      850
-## 3  2013     1     1      542            540        2.      923
-## 4  2013     1     1      544            545       -1.     1004
-## 5  2013     1     1      554            600       -6.      812
-## 6  2013     1     1      554            558       -4.      740
+## 1  2013     1     1      517            515         2      830
+## 2  2013     1     1      533            529         4      850
+## 3  2013     1     1      542            540         2      923
+## 4  2013     1     1      544            545        -1     1004
+## 5  2013     1     1      554            600        -6      812
+## 6  2013     1     1      554            558        -4      740
 ## # ... with 12 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;,
 ## #   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
 ## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
@@ -663,12 +666,12 @@ head(flights)</code></pre>
 <pre><code>## # A tibble: 6 x 13
 ##   manufacturer model displ  year   cyl trans drv     cty   hwy fl    class
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt;
-## 1 audi         a4     1.80  1999     4 auto~ f        18    29 p     comp~
-## 2 audi         a4     1.80  1999     4 manu~ f        21    29 p     comp~
-## 3 audi         a4     2.00  2008     4 manu~ f        20    31 p     comp~
-## 4 audi         a4     2.00  2008     4 auto~ f        21    30 p     comp~
-## 5 audi         a4     2.80  1999     6 auto~ f        16    26 p     comp~
-## 6 audi         a4     2.80  1999     6 manu~ f        18    26 p     comp~
+## 1 audi         a4      1.8  1999     4 auto~ f        18    29 p     comp~
+## 2 audi         a4      1.8  1999     4 manu~ f        21    29 p     comp~
+## 3 audi         a4      2    2008     4 manu~ f        20    31 p     comp~
+## 4 audi         a4      2    2008     4 auto~ f        21    30 p     comp~
+## 5 audi         a4      2.8  1999     6 auto~ f        16    26 p     comp~
+## 6 audi         a4      2.8  1999     6 manu~ f        18    26 p     comp~
 ## # ... with 2 more variables: mpg_city50 &lt;dbl&gt;, mpg_city80 &lt;dbl&gt;</code></pre>
 </div>
 <div id="-2.--ifelse" class="section level3">
@@ -686,12 +689,12 @@ head(flights)</code></pre>
 <pre><code>## # A tibble: 6 x 12
 ##   manufacturer model displ  year   cyl trans drv     cty   hwy fl    class
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt;
-## 1 chevrolet    c150~  5.30  2008     8 auto~ r        14    20 r     suv  
-## 2 chevrolet    c150~  5.30  2008     8 auto~ r        11    15 e     suv  
-## 3 chevrolet    c150~  5.30  2008     8 auto~ r        14    20 r     suv  
-## 4 chevrolet    c150~  5.70  1999     8 auto~ r        13    17 r     suv  
-## 5 chevrolet    c150~  6.00  2008     8 auto~ r        12    17 r     suv  
-## 6 chevrolet    corv~  5.70  1999     8 manu~ r        16    26 p     2sea~
+## 1 chevrolet    c150~   5.3  2008     8 auto~ r        14    20 r     suv  
+## 2 chevrolet    c150~   5.3  2008     8 auto~ r        11    15 e     suv  
+## 3 chevrolet    c150~   5.3  2008     8 auto~ r        14    20 r     suv  
+## 4 chevrolet    c150~   5.7  1999     8 auto~ r        13    17 r     suv  
+## 5 chevrolet    c150~   6    2008     8 auto~ r        12    17 r     suv  
+## 6 chevrolet    corv~   5.7  1999     8 manu~ r        16    26 p     2sea~
 ## # ... with 1 more variable: weighted_mpg &lt;dbl&gt;</code></pre>
 </div>
 </div>
@@ -702,12 +705,12 @@ head(flights)</code></pre>
 <pre><code>## # A tibble: 6 x 19
 ##    year month   day dep_time sched_dep_time dep_delay arr_time
 ##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
-## 1  2013     1     1      517            515        2.      830
-## 2  2013     1     1      533            529        4.      850
-## 3  2013     1     1      542            540        2.      923
-## 4  2013     1     1      544            545       -1.     1004
-## 5  2013     1     1      554            600       -6.      812
-## 6  2013     1     1      554            558       -4.      740
+## 1  2013     1     1      517            515         2      830
+## 2  2013     1     1      533            529         4      850
+## 3  2013     1     1      542            540         2      923
+## 4  2013     1     1      544            545        -1     1004
+## 5  2013     1     1      554            600        -6      812
+## 6  2013     1     1      554            558        -4      740
 ## # ... with 12 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;,
 ## #   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
 ## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
@@ -786,12 +789,12 @@ head(step2)</code></pre>
 <pre><code>## # A tibble: 6 x 5
 ##   model                cty   hwy class   weighted_mpg
 ##   &lt;chr&gt;              &lt;int&gt; &lt;int&gt; &lt;chr&gt;          &lt;dbl&gt;
-## 1 c1500 suburban 2wd    14    20 suv             17.0
-## 2 c1500 suburban 2wd    11    15 suv             13.0
-## 3 c1500 suburban 2wd    14    20 suv             17.0
-## 4 c1500 suburban 2wd    13    17 suv             15.0
+## 1 c1500 suburban 2wd    14    20 suv             17  
+## 2 c1500 suburban 2wd    11    15 suv             13  
+## 3 c1500 suburban 2wd    14    20 suv             17  
+## 4 c1500 suburban 2wd    13    17 suv             15  
 ## 5 c1500 suburban 2wd    12    17 suv             14.5
-## 6 corvette              16    26 2seater         16.0</code></pre>
+## 6 corvette              16    26 2seater         16</code></pre>
 <p>Для удобства, мы добавили дополнительный шаг, оставив в таблице только нужные столбцы.</p>
 <p><strong>Замечание:</strong> обратите внимание, что при включении функции в конвейер аргументы в списке надо указывать начиная со второго. Первый аргумент автоматически заполняется оператором <code>%&gt;%</code>.</p>
 <p>Результаты обработки данных можно сохранить в переменную. В этом случае туда запишется результат последней операции конвейера:</p>
@@ -851,7 +854,7 @@ head(step2)</code></pre>
 <pre><code>## # A tibble: 1 x 5
 ##   avg_cty median_cty iqr_cty n_obs percent_mising
 ##     &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;          &lt;dbl&gt;
-## 1    16.9        17.      5.   234             0.</code></pre>
+## 1    16.9         17       5   234              0</code></pre>
 </div>
 <div id="------group_by" class="section level2">
 <h2>Подсчет итогов по группам - <code>group_by()</code></h2>
@@ -863,12 +866,12 @@ head(step2)</code></pre>
 ## # Groups:   manufacturer [1]
 ##   manufacturer model displ  year   cyl trans drv     cty   hwy fl    class
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt;
-## 1 audi         a4     1.80  1999     4 auto~ f        18    29 p     comp~
-## 2 audi         a4     1.80  1999     4 manu~ f        21    29 p     comp~
-## 3 audi         a4     2.00  2008     4 manu~ f        20    31 p     comp~
-## 4 audi         a4     2.00  2008     4 auto~ f        21    30 p     comp~
-## 5 audi         a4     2.80  1999     6 auto~ f        16    26 p     comp~
-## 6 audi         a4     2.80  1999     6 manu~ f        18    26 p     comp~</code></pre>
+## 1 audi         a4      1.8  1999     4 auto~ f        18    29 p     comp~
+## 2 audi         a4      1.8  1999     4 manu~ f        21    29 p     comp~
+## 3 audi         a4      2    2008     4 manu~ f        20    31 p     comp~
+## 4 audi         a4      2    2008     4 auto~ f        21    30 p     comp~
+## 5 audi         a4      2.8  1999     6 auto~ f        16    26 p     comp~
+## 6 audi         a4      2.8  1999     6 manu~ f        18    26 p     comp~</code></pre>
 <p>Информация о группировке используется в дальнейшем при выполнении функции <code>summarise()</code>. Если задана группировка, то итоги считаются по группам.</p>
 <p>Составим рейтинг автопроизводителей по средней топливной эффективности их автомобилей.</p>
 <pre class="r"><code>mpg %&gt;% 
@@ -902,11 +905,11 @@ head(mpg_class_manuf)</code></pre>
 ##   class      manufacturer average_cty
 ##   &lt;chr&gt;      &lt;chr&gt;              &lt;dbl&gt;
 ## 1 subcompact honda               24.4
-## 2 subcompact volkswagen          24.0
+## 2 subcompact volkswagen          24  
 ## 3 compact    toyota              22.2
 ## 4 compact    volkswagen          20.8
-## 5 compact    nissan              20.0
-## 6 midsize    nissan              20.0</code></pre>
+## 5 compact    nissan              20  
+## 6 midsize    nissan              20</code></pre>
 <p>Применив на нижнем уровне группировку функцию для подсчета средней эффективности автомобиля, мы получили сгруппированную таблицу данных, в которой остался верхний уровень группировки - класс автомобиля.</p>
 <p>Теперь мы можем “снять” еще один уровень группировки - по классу автомобиля - чтобы выбрать лучшего производителя в каждом классе.</p>
 <pre class="r"><code>mpg_class_manuf %&gt;% 
@@ -917,7 +920,7 @@ head(mpg_class_manuf)</code></pre>
 ##   &lt;chr&gt;      &lt;chr&gt;              &lt;dbl&gt;
 ## 1 subcompact honda               24.4
 ## 2 compact    toyota              22.2
-## 3 midsize    nissan              20.0
+## 3 midsize    nissan              20  
 ## 4 suv        subaru              18.8
 ## 5 minivan    dodge               15.8
 ## 6 pickup     toyota              15.6
@@ -952,10 +955,10 @@ mpg %&gt;% top_n(n = 3, wt = displ)</code></pre>
 <pre><code>## # A tibble: 4 x 11
 ##   manufacturer model displ  year   cyl trans drv     cty   hwy fl    class
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt;
-## 1 chevrolet    corv~  6.20  2008     8 manu~ r        16    26 p     2sea~
-## 2 chevrolet    corv~  6.20  2008     8 auto~ r        15    25 p     2sea~
-## 3 chevrolet    corv~  7.00  2008     8 manu~ r        15    24 p     2sea~
-## 4 chevrolet    k150~  6.50  1999     8 auto~ 4        14    17 d     suv</code></pre>
+## 1 chevrolet    corv~   6.2  2008     8 manu~ r        16    26 p     2sea~
+## 2 chevrolet    corv~   6.2  2008     8 auto~ r        15    25 p     2sea~
+## 3 chevrolet    corv~   7    2008     8 manu~ r        15    24 p     2sea~
+## 4 chevrolet    k150~   6.5  1999     8 auto~ 4        14    17 d     suv</code></pre>
 </div>
 <div id="------" class="section level2">
 <h2>Упражнения - группировка и подсчет итогов</h2>
