@@ -10,7 +10,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(dev = 'svg', warning = FALSE) 
+knitr::opts_chunk$set(warning = FALSE) 
 # выбор векторного формата для графиков и отключение жалоб на русские шрифты на графиках
 ```
 
