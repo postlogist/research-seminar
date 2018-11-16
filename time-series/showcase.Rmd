@@ -1,7 +1,7 @@
 ---
 title: "Пример прогнозирования в R"
 author: "Заходякин Г.В., postlogist@gmail.com"
-date: '2 ноября 2017 г '
+date: '16 ноября 2018 г '
 output: html_document
 ---
 
@@ -21,6 +21,7 @@ sophisthse_metadata(transp)
 ```
 
 ```{r, eval=FALSE}
+
 # если нет интернета, следует убрать eval=FALSE, чтобы загрузить данные из локального файла
 transp <- read_rds('data/transp.RDS')
 ```
