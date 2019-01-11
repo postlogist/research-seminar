@@ -148,7 +148,7 @@ $(document).ready(function () {
 
 <div class="section level1">
 <h1>Введение</h1>
-<p>Пакет <code>forecast</code> использует временные ряды типа <code>ts</code>, а не табличные данные (<code>tibble</code> или <code>data_frame</code>). Это затрудняет подготовку данных для анализа и использование результатов средствами <code>tidyverse</code>. В настоящее время разработаны пакеты, позволяющие интегрировать пакеты для работы с временными рядами, использующие собственные форматы (<code>ts</code>, <code>zoo</code>, <code>xts</code>) с tidyverse.</p>
+<p>Пакет <code>forecast</code> использует временные ряды типа <code>ts</code>, а не табличные данные (<code>tibble</code> или <code>data_frame</code>). Это затрудняет подготовку данных для анализа и использование результатов средствами tidyverse. В настоящее время разработаны пакеты, позволяющие интегрировать пакеты для работы с временными рядами, использующие собственные форматы (<code>ts</code>, <code>zoo</code>, <code>xts</code>) с tidyverse.</p>
 <p>С ними можно познакомиться здесь:</p>
 <ul>
 <li><code>timetk</code> - для преобразования временных рядов в таблицы и обратно - <a href="https://business-science.github.io/timetk/" class="uri">https://business-science.github.io/timetk/</a></li>
@@ -163,8 +163,13 @@ $(document).ready(function () {
 <li>применения нескольких моделей к одному временному ряду с целью их сравнения и выбора лучшей модели</li>
 </ul>
 <p>Принципы, позволяющие автоматизировать работу с множеством рядов или моделей, рассмотрены в главе <a href="https://r4ds.had.co.nz/many-models.html">25 Many Models</a> книги R for Data Science. Применение функций <code>map*()</code> рассмотрено разделе <a href="https://r4ds.had.co.nz/iteration.html#the-map-functions">21.5 The map functions</a> этой же книги.</p>
-<p>Хорошоее объяснение работы со столбцами таблиц, содержащими объекты (<strong>list-columns</strong>) дается также в видео Garret Grolemund <a href="https://resources.rstudio.com/webinars/how-to-work-with-list-columns-garrett-grolemund">How to Work with List Columns</a>, рекомендуем его посмотреть.</p>
-<p>Данный блокнот основан на примерах Matt Dancho - <a href="https://business-science.github.io/sweep/articles/SW00_Introduction_to_sweep.html">Introduction to sweep</a> - <a href="https://business-science.github.io/sweep/articles/SW01_Forecasting_Time_Series_Groups.html">Forecasting Time Series Groups in the tidyverse</a> - <a href="https://business-science.github.io/sweep/articles/SW02_Forecasting_Multiple_Models.html">Forecasting Using Multiple Models</a></p>
+<p>Хорошее объяснение работы со столбцами таблиц, содержащими объекты (<strong>list-columns</strong>) дается также в видео Garret Grolemund <a href="https://resources.rstudio.com/webinars/how-to-work-with-list-columns-garrett-grolemund">How to Work with List Columns</a>, рекомендуем его посмотреть.</p>
+<p>Данный блокнот основан на примерах Matt Dancho:</p>
+<ul>
+<li><p><a href="https://business-science.github.io/sweep/articles/SW00_Introduction_to_sweep.html">Introduction to sweep</a></p></li>
+<li><p><a href="https://business-science.github.io/sweep/articles/SW01_Forecasting_Time_Series_Groups.html">Forecasting Time Series Groups in the tidyverse</a></p></li>
+<li><p><a href="https://business-science.github.io/sweep/articles/SW02_Forecasting_Multiple_Models.html">Forecasting Using Multiple Models</a></p></li>
+</ul>
 <pre class="r"><code>library(tidyverse)
 library(forecast)
 library(readxl) 

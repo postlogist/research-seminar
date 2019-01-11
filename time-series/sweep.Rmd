@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 # Введение
 
 Пакет `forecast` использует временные ряды типа `ts`, а не табличные данные (`tibble` или `data_frame`). 
-Это затрудняет подготовку данных для анализа и использование результатов средствами `tidyverse`. 
+Это затрудняет подготовку данных для анализа и использование результатов средствами tidyverse. 
 В настоящее время разработаны пакеты, позволяющие интегрировать пакеты для работы с временными рядами, использующие собственные форматы (`ts`, `zoo`, `xts`) с tidyverse. 
 
 С ними можно познакомиться здесь:
@@ -33,12 +33,15 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
 Принципы, позволяющие автоматизировать работу с множеством рядов или моделей, рассмотрены в главе [25 Many Models](https://r4ds.had.co.nz/many-models.html) книги R for Data Science. Применение функций `map*()` рассмотрено разделе [21.5 The map functions](https://r4ds.had.co.nz/iteration.html#the-map-functions) этой же книги.
 
-Хорошоее объяснение работы со столбцами таблиц, содержащими объекты (**list-columns**) дается также в видео Garret Grolemund [How to Work with List Columns](https://resources.rstudio.com/webinars/how-to-work-with-list-columns-garrett-grolemund), рекомендуем его посмотреть.
+Хорошее объяснение работы со столбцами таблиц, содержащими объекты (**list-columns**) дается также в видео Garret Grolemund [How to Work with List Columns](https://resources.rstudio.com/webinars/how-to-work-with-list-columns-garrett-grolemund), рекомендуем его посмотреть.
 
 
-Данный блокнот основан на примерах Matt Dancho
+Данный блокнот основан на примерах Matt Dancho:  
+
   - [Introduction to sweep](https://business-science.github.io/sweep/articles/SW00_Introduction_to_sweep.html)
+  
   - [Forecasting Time Series Groups in the tidyverse](https://business-science.github.io/sweep/articles/SW01_Forecasting_Time_Series_Groups.html)
+  
   - [Forecasting Using Multiple Models](https://business-science.github.io/sweep/articles/SW02_Forecasting_Multiple_Models.html)
 
 
