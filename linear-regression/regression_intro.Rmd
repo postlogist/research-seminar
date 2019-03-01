@@ -517,7 +517,7 @@ names(m_Lactic)
 
 Другим способом является визуализация с помощью данных подгонки модели, возвращаемых функцией `lm()`. Можно вручную извлечь эти данные с помощью функции `fitted()` и добавить их в набор данных, либо воспользоваться функцией `modelr::add_predictions()`. Столбец с прогнозом называется `pred`.
 
-```{r Визуализация модели по исходным данным}
+```{r Визуализация модели по исходным данным, fig.asp=0.75}
 pred_Lactic <- cheese %>% add_predictions(m_Lactic)
 
 ggplot(data = pred_Lactic) +
@@ -532,8 +532,11 @@ ggplot(data = pred_Lactic) +
 ```{r Визуализация модели по сетке данных}
 
 grid_Lactic <- cheese %>%
-  data_grid(Lactic) %>%
+  data_grid(Lactic = seq_range(Lactic, 10)) %>%
   add_predictions(m_Lactic)
+
+grid_Lactic
+
 
 ggplot(data = pred_Lactic) +
   geom_point(aes(Lactic, Taste)) +
