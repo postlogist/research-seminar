@@ -324,7 +324,7 @@ ggplot(tibble(x, y = sqrt(y_hetero)),
        aes(x, y)) +
   geom_point() + 
   geom_smooth(method=lm, se=F, col='blue') +
-  labs(title='Логарифмическое преобразование для данных с гетероскедастичностью',
+  labs(title='Преобразование квадратного корня для данных с гетероскедастичностью',
               y = 'sqrt(y)')
 
 # Обратное значение
