@@ -52,7 +52,7 @@ predict(m_ctree, newdata = gr, type = "response")
 
 Наиболее известным пакетом, создающим среду для разработки моделей, является [caret](http://topepo.github.io/caret/index.html), разработанный Max Kuhn.
 
-Более современной разработкой является пакет [mlr](http://mlr-org.github.io/) - Machine Learning in R, разработанный Bernd Bischl. В отличие от caret, этот пакет использует для визуализации результатов графическую систему ggplot2.
+Более современной разработкой является пакет [mlr](https://mlr.mlr-org.com/) - Machine Learning in R, разработанный Bernd Bischl. В отличие от caret, этот пакет использует для визуализации результатов графическую систему ggplot2.
 
 На рисунке показаны основные операции и объекты в процессе моделирования с помощью пакета mlr.
 
@@ -193,12 +193,12 @@ getTaskSize(car_task)
 
 ### Шаг 2. Создание ученика (learner)
 
-В mlr встроены несколько десятков алгоритмов для решения задач классификации и регрессии. Список этих алгоритмов можно получить с помощью функции `listLearners()` или в документации пакета -[Available Learners]https://mlr-org.github.io/mlr-tutorial/release/html/integrated_learners/index.html
+В mlr встроены несколько десятков алгоритмов для решения задач классификации и регрессии. Список этих алгоритмов можно получить с помощью функции `listLearners()` или в документации пакета -[Available Learners]https://mlr.mlr-org.com/articles/tutorial/integrated_learners.html
 
 ```{r Список алгоритмов для решения задач регрессии}
 listLearners(obj = "regr") %>%
   select(name, class) %>% 
-  arrange(str_length(name)) %>%
+  mutate(name = substr(name, 1, 60)) %>%
   head(10) %>%
   arrange(name)
 
@@ -254,7 +254,7 @@ car_task <- car_task %>%
 https://github.com/mlr-org/mlr/issues/811
 
 
-Выбросы (некорректные значения объема двигателя и цены) мы уже удалили стандартными средствами до создания задачи. Однако в mlr также имеются функции, облегчающие борьбу с выбросами (см. http://mlr-org.github.io/mlr-tutorial/release/html/preproc/index.html)
+Выбросы (некорректные значения объема двигателя и цены) мы уже удалили стандартными средствами до создания задачи. Однако в mlr также имеются функции, облегчающие борьбу с выбросами (см. https://mlr.mlr-org.com/articles/tutorial/preproc.html)
 
 Многие модели не могут работать с пропущенными значениями. Например, попытка обучить модель регрессии на данных с NA приведет к ошибке.
 
@@ -268,7 +268,8 @@ https://github.com/mlr-org/mlr/issues/811
 
 ```{r Замена пропущенных значений drive и engV}
 car_imputation <- car_task %>%
-  impute(classes = list(numeric = imputeMean(), factor = imputeConstant("Unknown"))) 
+  impute(classes = list(numeric = imputeMean(), 
+                        factor = imputeConstant("Unknown"))) 
 
 car_imputation
 ```
@@ -536,7 +537,7 @@ car_bench %>%
 
 Самым точным алгоритмом оказался ctree, а самым быстрым - rpart.
 
-См. также https://mlr-org.github.io/mlr-tutorial/release/html/benchmark_experiments/index.html
+См. также https://mlr.mlr-org.com/articles/tutorial/benchmark_experiments.html
 
 
 # Задача классификации
@@ -601,12 +602,12 @@ listLearners("classif") %>%
 ```{r}
 listLearners("classif") %>%
   select(name, package) %>%
-  filter(str_length(name) < 25) %>%
-  head()
+  mutate(name = substr(name, 1, 60)) %>%
+  head(10)
 
 ```
 
-См. также список алгоритмов в документации mlr [Available Learners]https://mlr-org.github.io/mlr-tutorial/release/html/integrated_learners/index.html
+См. также список алгоритмов в документации mlr [Available Learners]https://mlr.mlr-org.com/articles/tutorial/integrated_learners.html
 
 
 Создадим сразу несколько алгоритмов классификации и поместим их в один список:
@@ -823,7 +824,7 @@ turnover_roc2$data %>%
 Лучший результат - у моделей rpart и C5.0.
 
 См. также
-https://mlr-org.github.io/mlr-tutorial/release/html/roc_analysis/index.html
+https://mlr.mlr-org.com/articles/tutorial/roc_analysis.html
 
 ## Оптимизация гиперпараметров модели
 
@@ -855,7 +856,7 @@ ps_rpart = makeParamSet(
 
 Чем больше гиперпараметров в наборе и число возможных значений каждого параметра, тем дольше будет проводиться поиск оптимального сочетания.
 
-Доступны несколько алгоритмов оптимизации параметров (см. http://mlr-org.github.io/mlr-tutorial/release/html/tune/index.html).
+Доступны несколько алгоритмов оптимизации параметров (см. https://mlr.mlr-org.com/articles/tutorial/tune.html).
 
 Наиболее простым (и долгим) является перебор всех сочетаний `makeTuneControlGrid()`. Быстрее, но без гарантий, работает алгоритм случайного перебора `makeTuneControlRandom()`. В этом примере мы используем алгоритм имитации отжига, который сочетает направленный перебор и случайный поиск - `makeTuneControlGenSA()`.
 
@@ -918,7 +919,7 @@ generateHyperParsEffectData(res_rpart) %>%
 
 На тепловой карте точки обозначают проверенные в процессе перебора сочетания гиперапараметров, а сплошная цветовая заливка получена в результате интерполяции значений целевого показателя в этих точках. Видно, что наибольшие значения AUC получаются при $cp \approx 10^{-2.5}$ и $20 < minsplit < 35$.
 
-См. также http://mlr-org.github.io/Exploring-and-Understanding-Hyperparameter-Tuning/
+См. также https://mlr.mlr-org.com/articles/tutorial/hyperpar_tuning_effects.html
 
 
 Построим модель с оптимизированными гиперпараметрами:
@@ -999,11 +1000,9 @@ list(rpart = turnover_rpart,
 # Рекомендованные ресурсы
 
  - Видео мастер-класса Bernd Bischl OpenML + R + mlr https://www.youtube.com/watch?v=rzjkT1uLNi4&t=672s
- - MLR Tutorial, online http://mlr-org.github.io/mlr-tutorial/release/html/
+ - MLR Tutorial, online https://mlr.mlr-org.com/articles/tutorial/task.html (см. меню Basics и Advanced в верхней части страницы)
  - MLR Tutorial, pdf https://arxiv.org/abs/1609.06146
  - Что делать, если выдается ошибка о новых уровнях фактора в тестовых данных https://github.com/mlr-org/mlr/issues/811
- - Таблица доступных в mlr моделей https://mlr-org.github.io/mlr-tutorial/release/html/integrated_learners/index.html
- - Оптимизация гиперпараметров алгоритма обучения http://mlr-org.github.io/Exploring-and-Understanding-Hyperparameter-Tuning/
- 
- 
+ - Таблица доступных в mlr моделей https://mlr.mlr-org.com/articles/tutorial/integrated_learners.html
+ - Оптимизация гиперпараметров алгоритма обучения https://mlr.mlr-org.com/articles/tutorial/tune.html и https://mlr.mlr-org.com/articles/tutorial/hyperpar_tuning_effects.html 
  
