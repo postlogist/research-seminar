@@ -402,10 +402,10 @@ resample(learner = lrn_lm,
 
 # Новый автомобиль
 new_car2 <- tibble(car = "Ford", body = "crossover",
-              mileage = 10L, engV = 2.7,
+              mileage = 10, engV = 2.7,
               inv_mileage = 1000 / (10 + 1),
               engType = "Gas", registration = "yes",
-              year = 2012L, drive = "full", model = ".other"
+              year = 2012, drive = "full", model = ".other"
               )
 
 # Применение стратегии предобработки

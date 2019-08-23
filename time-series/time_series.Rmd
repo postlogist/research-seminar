@@ -251,7 +251,7 @@ all_dates_tbl <- tibble(`Месяц` = all_dates) %>%
 
 # Если были пропуски - заполняем нулями
 all_dates_tbl_fixed <- all_dates_tbl %>%
-  mutate(`Количество` = coalesce(`Количество`, 0L)) #0L - целочисленная константа 0
+  mutate(`Количество` = coalesce(`Количество`, 0))
 
 ```
 
