@@ -167,6 +167,11 @@ install.packages('webshot') #make snapshots of HTML widgets
 install.packages("caret") 
 # also installing the dependency ‘ModelMetrics’
 
+devtools::install_github("drsimonj/pipelearner") # required for oetteR - modeling using pipelines
+install.packages("tidymodels") # Tidy modeling framework
+devtools::install_github('erblast/oetteR') # useful functions for modeling and visualizing the results
+
+
 # Packages required for MLR - install this first!
 
 install.packages("fastmatch")
@@ -245,6 +250,8 @@ install.packages("VGAM") #Vector Generalized Linear and Additive Models, distrib
 
 install.packages("NbClust") # selecting optimal number of clusters
 
+install.packages("tree") # decison tree classifiers (used in ISLR)
+
 install.packages("maptree") # decision tree visualization
 
 # Excluded:
@@ -287,6 +294,17 @@ install.packages("maptree") # decision tree visualization
 #install.packages("sandwich") #Robust Covariance Matrix Estimators
 #install.packages("xgboost") 
 
+
+## Feature selection and engineering
+
+install.packages("rbin") # manual and automated variable binning methods
+install.packages("smbinning") # supervised categorization
+install.packages("woeBinning") #Supervised Weight of Evidence Binning of Numeric Variables and Factors
+install.packages("scorecard") # WoE and IV for credit risk modelling
+install.packages("Information") # Information: Data Exploration with WoE & IV
+install.packages("ClustOfVar") # Clustering similar variables
+install.packages("funModeling") # EDA, data preparation and model performance (companion to DS Live Book)
+install.packages("InformationValue") # Performance of binary classification models
 
 ##
 ## Data Formats
