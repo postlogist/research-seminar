@@ -1,0 +1,90 @@
+
+```{r  echo=FALSE, message=FALSE}
+library(tidyr)
+library(dplyr)
+library(readr)
+library(magrittr)
+library(readxl)
+library(openxlsx)
+```
+
+# Analyzing tidyr
+
+[tidyverse](https://tidyr.tidyverse.org/reference/gather.html)
+
+
+**gather(data, key = "key", value = "value", ..., na.rm = FALSE,
+  convert = FALSE, factor_key = FALSE)**
+
+
+## Arguments
+
+* **data** A data frame.
+
+* **key, value** Names of new key and value columns, as strings or symbols.This argument is passed by expression and supports quasiquotation (you can unquote strings and symbols). The name is captured from the |expression with **rlang::ensym()** (note that this kind of interface where symbols do not represent actual objects is now discouraged in the |tidyverse; we support it here for backward compatibility).
+
+* **...** A selection of columns. If empty, all variables are selected. You can supply bare variable names, select all variables between **x** and **z** with **x:z**, exclude y with **-y**. For more options, see the **dplyr::select()** documentation. See also the section on selection rules below.
+
+* **na.rm** If **TRUE**, will remove rows from output where the value column is NA.
+
+* **convert** If TRUE will automatically run type.convert() on the key column. This is useful if the column types are actually numeric, integer, or logical.
+
+* **factor_key** If FALSE, the default, the key values will be stored as a character vector. If TRUE, will be stored as a factor, which preserves the original ordering of the columns.
+
+
+## Rules for selection
+Arguments for selecting columns are passed to **tidyselect::vars_select()** and are treated specially. Unlike other verbs, selecting functions make a strict distinction between data expressions and context expressions.
+
+* A data expression is either a bare name like x or an expression like **x:y** or **c(x, y**). In a data expression, you can only refer to columns from the data frame.
+
+* Everything else is a context expression in which you can only refer to objects that you have defined with **<-**.
+
+For instance, **col1:col3** is a data expression that refers to data columns, while seq(start, end) is a context expression that refers to objects from the contexts.
+
+If you really need to refer to contextual objects from a data expression, you can unquote them with the tidy eval operator !!. This operator evaluates its argument in the context and inlines the result in the surrounding function call. For instance, **c(x, !! x)** selects the x column within the data frame and the column referred to by the object x defined in the context (which can contain either a column name as string or a column position).
+
+
+
+```{r}
+# example
+stocks <- data.frame(
+  time = as.Date('2019-01-01') + 0:4,
+  X = rnorm(5, 0, 1),
+  Y = rnorm(5, 0, 2),
+  Z = rnorm(5, 0, 4)
+)
+stocks
+```
+#Normalizing data
+```{r}
+
+# old
+stocks_gather <- stocks %>% gather( key   = "stock", 
+                                   value = "price", 
+                                   -time)
+stocks_gather
+```
+
+
+```{r}
+stocks_long   <- stocks %>% pivot_longer(cols= time, 
+                                       names_to  = "stock", 
+                                       values_to = "price")
+stocks_long
+```
+#Denormalizing data
+
+```{r}
+# old
+stocks_spread <- stocks_gather %>% spread(key = stock, value = price) 
+
+stocks_spread
+```
+
+```{r}
+# new 
+stock_wide <- stocks_long %>% pivot_wider(names_from  = "stock", values_from = "price")
+
+stock_wide 
+```
+
