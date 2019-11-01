@@ -88,3 +88,14 @@ stock_wide <- stocks_long %>% pivot_wider(names_from  = "stock", values_from = "
 stock_wide 
 ```
 
+
+```{r}
+# example separate
+df <- data.frame(x = c(NA, "0_20", "5_30", "b_c"))
+df
+```
+
+```{r}
+df_separate <- separate(df, x, into = c("x1", "x2"), sep = "_", convert = TRUE)
+df_separate
+```
