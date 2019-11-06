@@ -14,13 +14,14 @@ library(tidyverse)
 
 Загрузим данные о коммерческом грузообороте транспорта в России.
 
-```{r Загрузка данных ряда TRP_M_CARG}
+```{r Загрузка данных ряда TRP_M_CARG,eval=F,include=F}
+# На 06.11.2019 база Sophist недоступна из-за реорганизации
 transp <- sophisthse('TRP_M_CARG')
 head(transp)
 sophisthse_metadata(transp)
 ```
 
-```{r, eval=FALSE}
+```{r}
 
 # если нет интернета, следует убрать eval=FALSE, чтобы загрузить данные из локального файла
 transp <- read_rds('data/transp.RDS')
@@ -52,7 +53,6 @@ transp %>%
 ```{r Автоматическая очистка от выбросов}
 
 transp_fixed <- transp %>%
-  .[, 1] %>% # убираем лишние атрибуты
   tsclean()
 
 ```

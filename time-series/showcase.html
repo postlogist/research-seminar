@@ -373,15 +373,6 @@ summary {
 library(sophisthse)
 library(tidyverse)</code></pre>
 <p>Загрузим данные о коммерческом грузообороте транспорта в России.</p>
-<pre class="r"><code>transp &lt;- sophisthse(&#39;TRP_M_CARG&#39;)
-head(transp)</code></pre>
-<pre><code>##        Jan   Feb   Mar   Apr   May   Jun
-## 1995 295.2 270.4 317.0 281.8 312.6 293.4</code></pre>
-<pre class="r"><code>sophisthse_metadata(transp)</code></pre>
-<pre><code>## # A tibble: 1 x 7
-##   tsname  unit   fullname     methodology      source    comment       freq
-##   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;            &lt;chr&gt;     &lt;chr&gt;        &lt;dbl&gt;
-## 1 TRP_M_~ млрд.~ Коммерчески~ &quot;Грузооборот тр~ Федераль~ 1995 -1997г~    12</code></pre>
 <pre class="r"><code># если нет интернета, следует убрать eval=FALSE, чтобы загрузить данные из локального файла
 transp &lt;- read_rds(&#39;data/transp.RDS&#39;)</code></pre>
 <p>Посмотрим, как выглядит ряд на графике.</p>
@@ -396,7 +387,6 @@ transp &lt;- read_rds(&#39;data/transp.RDS&#39;)</code></pre>
 <p>Нет данных за январь 2014 года…</p>
 <p>Удалим выбросы…</p>
 <pre class="r"><code>transp_fixed &lt;- transp %&gt;%
-  .[, 1] %&gt;% # убираем лишние атрибуты
   tsclean()</code></pre>
 <p>Сравним исходный и очищенный временной ряд…</p>
 <pre class="r"><code>autoplot(transp, series = &#39;Исходный ряд&#39;) +
