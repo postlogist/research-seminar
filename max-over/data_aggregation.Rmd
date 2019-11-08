@@ -1,0 +1,179 @@
+```{r}
+library(readxl)
+library(openxlsx)
+library(tidyverse)
+```
+
+## Part 1 - creating main dataset
+
+# 0.Modify excel file - add "Month" column with range 1-12
+
+# 1.Read delivery and clients data
+
+```{r}
+clients_1_6 <- read_excel("E:/R/Cost_allocation.xlsx", sheet = "Data_main_clients1-6")
+clients_7_12 <- read_excel("E:/R/Cost_allocation.xlsx", sheet = "Data_main_clients7-12")
+delivery_all <- read_excel("E:/R/Cost_allocation.xlsx", sheet = "Data_main_delivery")
+```
+
+# 2.Merge clients data with rbind(), remove excess columns
+
+```{r}
+clients_all <-   rbind(clients_1_6, ..... ) %>%
+  select (-..... )
+clients_all
+```
+# 3.Rename delivery table columns  
+```{r}
+delivery_all <- delivery_all %>%
+  mutate ( Loadsheet_Delivered_fact_rcs =  Delivered_fact_rcs) %>%
+ select ( c(-....., -....., -.....))
+delivery_all
+```
+
+
+
+# 4.Join delivery and clients data
+
+```{r}
+clients_delivery_all <- merge(clients_all, delivery_all, by = '.....')
+clients_delivery_all
+```
+
+# 5.Create a new table with number of stops
+
+```{r}
+number_of_stops <-  clients_delivery_all %>% group_by(loadsheet) 
+number_of_stops
+number_of_stops <-  summarise(number_of_stops, stops = n()) %>%
+  mutate (stops)
+number_of_stops
+```
+
+# 6.Add number of stops data to main table
+
+```{r}
+clients_delivery_all_stops <- merge(....)
+clients_delivery_all_stops
+```
+
+# 7.Calculate KM to stop (add "km_to_stop" column)
+```{r}
+
+
+```
+
+## Part 2 - calculating trdparty costs
+# 8. Creating separate tables for trdparty and own shipments
+
+```{r}
+clients_delivery_all_stops <- mutate (clients_delivery_all_stops, Costs_trdparty = TrdpartyPrice/Loadsheet_Delivered_fact_rcs*Delivered_fact_rcs)
+
+clients_delivery_all_stops_own <-
+
+```
+
+## Part 3 - creating additional rate tables
+
+# 9.Get all cases(rcs), distance (kms)s and stops (stops) during month (own transport)
+
+```{r}
+month_group <-  ..... %>% group_by(Month) 
+
+month_group <-  summarise(month_group, stops = n(), rcs = ..., kms = .... ) %>%
+  mutate (stops,rcs, kms)
+
+```
+
+# 10. Get Repair_Maintenance data ("RM_Costs")
+
+```{r}
+r_m <- read_excel("E:/R/Cost_allocation.xlsx", sheet = "Repair_Maintenance")
+r_m <- pivot_longer (r_m, cols = 1:12, ..., ...)
+r_m
+```
+
+# 11. Get Fuel data
+
+```{r}
+fuel <- read_excel("E:/R/Cost_allocation.xlsx", sheet = "....")
+fuel <- ..
+fuel
+```
+
+# 12. Get Depriciation data
+
+```{r}
+depr_fd <- read_excel("E:/R/Cost_allocation.xlsx", sheet = "....")
+depr_fd <- ..
+depr_fd
+```
+
+# 13. Get Fleet Labour_Benefits data
+
+```{r}
+l_b_fd <- read_excel("E:/R/Cost_allocation.xlsx", sheet = "..")
+l_b_fd <- ..
+l_b_fd
+```
+
+# 14. Get Drivers_Labour_Benefits data
+
+```{r}
+l_b_drivers <- read_excel("E:/R/Cost_allocation.xlsx", sheet = "..")
+l_b_drivers <- ..
+l_b_drivers
+```
+
+# 15. Get month costs rate
+```{r}
+month_group <- merge(month_group, r_m,  by = 'Month')
+month_group <- ..
+month_group <- ..
+month_group <- ..
+month_group <- ..
+
+```
+
+# 16 Calculate month rates (example: R_M_Rate is R_M_Costs divided by total kilometers)
+
+```{r}
+month_group <- month_group %>%
+  mutate(R_M_Rate =.., Fuel_Rate = .., .. = .., .. = .., .. = ..) %>%
+  #Which columns should be selected?
+  select (.. )
+
+```
+
+## Part 4. Add rates data to main table (own transport):
+
+# 17. Join tables: main data table with aggregated month data
+
+```{r}
+clients_delivery_all_stops <- merge(..)
+```
+
+# 18. Calculating allocated costs (example: R_M_Alloc_Costs = R_M_Rate*km_to_stop)
+
+```{r}
+clients_delivery_all_stops_final <- clients_delivery_all_stops %>%
+  mutate(..)
+
+clients_delivery_all_stops_final 
+
+```
+
+#19. Removing excess data
+
+```{r}
+clients_delivery_all_stops_final2 <- clients_delivery_all_stops_final  %>%
+  #This line changes all NA to zero values:
+  mutate_all(~replace(., is.na(.), 0)) %>%
+  mutate(Total_Alloc_Costs =( R_M_Alloc_Costs + Fuel_Alloc_Costs + Depr_Alloc_Costs+
+           FD_LB_Costs+ Drivers_LB_Costs+ Costs_trdparty ) ) %>%
+ select (-c(Month, R_M_Rate,Fuel_Rate,Depr_Rate,FD_LB_Rate,Drivers_LB_Rate) )
+clients_delivery_all_stops_final2
+
+write.xlsx(clients_delivery_all_stops_final2, 'test_3.xlsx')
+
+```
