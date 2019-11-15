@@ -1,7 +1,7 @@
 ---
 title: "Analysis of russian macro-economic trends"
 author: "<your name here>"
-date: '18 ноября 2018 г '
+date: '22 November 2019 г '
 output: ioslides_presentation
 ---
 
@@ -14,7 +14,7 @@ library(sophisthse)
 
 ```{r}
 # Loading data
-retail <- sophisthse('RTRD_M')[, 'RTRD_M']
+
 ```
 
 
