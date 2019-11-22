@@ -296,7 +296,16 @@ retail_detrended %>%
   labs(title = 'Сезонный график (ряд с удаленным трендом)')
 ```
 
+Доп. информация по трансформации данных
 
+LOESS:
+https://rafalab.github.io/dsbook/smoothing.html
+
+LOESS 2:
+https://align-alytics.com/seasonal-decomposition-of-time-series-by-loessan-experiment/
+
+BoxCox:
+https://otexts.com/fpp2/transformations.html
 
 
 ## STL-декомпозиция
