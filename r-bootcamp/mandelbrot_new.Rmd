@@ -1,0 +1,28 @@
+```{r}
+library(caTools)         # external package providing write.gif function
+jet.colors <- colorRampPalette(c( "black","magenta", "green", "cyan", "yellow", "white" ))
+setwd("E:/R/Mandelbrot")
+m <- 600  # went smaller because 171mb vector size error-ed out
+
+C <- complex( real=rep(seq(-1.8,0.6, length.out=m), each=m ), imaginary=rep(seq(-1.2,1.2, length.out=m), m ) )
+C <- matrix(C,m,m)       # reshape as square matrix of complex numbers
+
+Z <- 0                   # initialize Z to zero
+X <- array(0, c(m,m,25)) # initialize output 3D array
+
+for (k in 1:25) {        # loop with  to see if smaller better - 10 ok; 15 too much
+  Z <- C+Z^2            # the central difference equation
+ # X[,,k] <- exp(-abs(Z)) # capture results
+  X[,,k] <- abs(Z) # capture results
+}
+write.gif(X, "Mandelbrot.gif", col=jet.colors, delay=50)
+
+```
+
+```{r}
+C <- complex( real=rep(seq(0.0,1.0, length.out=3), each=3 ), imaginary=rep(seq(0.0,1.0, length.out=3), 3 ) )
+C
+C <- matrix(C,3,3)
+C 
+```
+

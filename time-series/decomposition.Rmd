@@ -142,12 +142,41 @@ euro %>%
     scale_x_date(date_breaks = '1 months') + 
   geom_line(color = 'blue')
 
-# График курса за 6 недель
+# График курса за 8 недель
 euro %>%
-  window(start = today() - weeks(6)) %>%
+  window(start = today() - weeks(8)) %>%
     autoplot() +
       labs(y = 'руб/Евро', x = NULL,
-         title = 'Курс Евро за 6 недель') +
+         title = 'Курс Евро за 8 недель') +
+      scale_x_date(date_breaks = '1 week') +
+  geom_line(color = 'blue')
+
+
+```
+
+Наличие тренда в данных затрудняет сравнение периодов, поэтому попробуем удалить тренд. 
+Для этого можно вычесть из данных ряда сглаженное значение, полученное путем усреднения данных за 7 дней - сглаженный тренд.
+
+```{r}
+# Сглаженный ряд - скользящее среднее с окном 7 дней
+euro_smooth <- rollmean(euro, k = 7)
+names(euro_smooth) <- "EUR.RUB Smoothed"
+# График исходного и сглаженного курса
+merge(euro, euro_smooth) %>% 
+  autoplot(facets = NULL, names = c("Курс", "Тренд")) +
+  labs(y = 'руб/Евро', x = NULL,
+  title = 'Сравнение исходного и сглаженного курса Евро за 6 месяцев') +
+  scale_x_date(date_breaks = '1 months')
+  
+  
+  #geom_line(color = 'blue')
+
+# Отклонения наблюдений за каждый день от тренда
+(euro - euro_smooth)  %>%
+  window(start = today() - weeks(8)) %>%
+    autoplot() +
+      labs(y = 'руб/Евро', x = NULL,
+         title = 'Отклонение курса Евро от среднего за неделю - данные за 8 недель') +
       scale_x_date(date_breaks = '1 week') +
   geom_line(color = 'blue')
 
