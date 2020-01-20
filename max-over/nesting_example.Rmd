@@ -1,0 +1,70 @@
+# https://cmdlinetips.com/2019/04/introduction-to-nest-in-tidyr/
+
+```{r}
+#library(tidyr)
+library(gapminder)
+library(tidyverse)
+```
+
+  
+```{r}
+nested_by_continent <- gapminder %>% 
+  group_by(continent) %>%
+  tidyr::nest()
+```
+
+```{r}
+nested_by_continent
+```
+
+```{r}
+nested_by_continent[['continent']]
+```
+
+```{r}
+nested_by_continent[['data']][[2]]
+```
+```{r}
+fit <- lm(lifeExp ~ gdpPercap, 
+          data=nested_by_continent[['data']][[1]])
+fit
+```
+
+```{r}
+le_vs_gdpPercap <- function(df) {
+  lm(lifeExp ~ gdpPercap, data = df)
+}
+```
+
+```{r}
+map(nested_by_continent$data[1:2], le_vs_gdpPercap)
+```
+
+```{r}
+nested_by_continent_new <-nested_by_continent %>%
+ mutate(fit = map(data, le_vs_gdpPercap))
+nested_by_continent_new
+```
+```{r}
+nested_by_continent_new[["fit"]][[3]]
+nested_by_continent_new[["continent"]][[3]]
+```
+
+```{r}
+# scatter plot
+plot_le_gdp <- function(df){
+  p <- df %>% ggplot(aes(x=lifeExp, y=gdpPercap)) +
+    geom_point(alpha=0.5) + 
+    scale_y_log10()
+  return(p)
+}  
+```
+
+```{r}
+nested_by_continent_new_plot <-nested_by_continent_new %>%
+ mutate(plt = map(data, plot_le_gdp))
+nested_by_continent_new_plot
+
+nested_by_continent_new_plot[["plt"]][[1]]
+```
+
