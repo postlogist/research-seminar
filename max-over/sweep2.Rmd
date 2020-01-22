@@ -82,7 +82,7 @@ umtmti %>%
 ```
 
 ```{r}
-starting_date <- min(catalog$observation_date)
+starting_date <- min(umtmti$observation_date)
 umtmti_ts <- umtmti %>% 
   select(observation_date, UMTMTI) %>%
   tk_ts(start = 
