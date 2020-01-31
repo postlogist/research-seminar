@@ -13,6 +13,7 @@ options(digits = 4) #4 digits in output
 
 ```{r Load packages, message=FALSE, warning=FALSE}
 library(tidyverse)
+library(readxl)
 ```
 
 
