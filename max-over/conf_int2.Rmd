@@ -185,9 +185,3 @@ binded_sets_nested_new2 [["result"]][[2]]
 binded_sets_nested_new2[["result"]][[3]]
 ```
 
-
-```{r}
-AView_vs_VesTed <- function(df) {
-  lm(AnnouncementsView ~ VisITedResources, data = df)
-}
-```
