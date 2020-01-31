@@ -157,17 +157,7 @@ bounds_estimation <- function(exp_set){
 } 
 ```
 
-```{r}
-bounds_estimation2 <- function(exp_set,lb,hb){
-  set_count1 <- sum(exp_set$value==1)
-  count_total <- nrow(exp_set)
-  out_of_bound_prob_high <-qbinom(hb,count_total,0.5)
-  out_of_bound_prob_low <-qbinom(lb,count_total,0.5)
-  result_prob <-pbinom(set_count1,count_total,0.5)
-  test = ifelse(result_prob>lb && result_prob<hb,"credible","most likely cheating"  )
-  return( test)
-} 
-```
+
 
 ```{r}
 binded_sets_nested_new <- binded_sets_nested %>%
@@ -177,12 +167,5 @@ binded_sets_nested_new [["result"]][[2]]
 binded_sets_nested_new [["result"]][[3]]
 ```
 
-```{r}
-binded_sets_nested_new2 <- binded_sets_nested %>%
-mutate(result =  pmap(list(exp_set = data, lb = 0.005, hb = 0.995), bounds_estimation2))
 
-binded_sets_nested_new2 [["result"]][[1]]
-binded_sets_nested_new2 [["result"]][[2]]
-binded_sets_nested_new2[["result"]][[3]]
-```
 
