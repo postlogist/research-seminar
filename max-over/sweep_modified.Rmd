@@ -1,0 +1,311 @@
+```{r, message=F, warning=F}
+library(tidyverse)
+library(forecast)
+library(readxl) 
+library(lubridate) # для работы с датами
+library(timetk) # для преобразования таблиц во временные ряды и обратно
+library(sweep) # для преобразования результатов моделирования в табличный формат
+library(timetk) #time series
+
+```
+# tidyquant - один из возможных источников данных временных рядов для анализа
+```{r}
+install.packages("tidyquant")
+```
+
+#Пример данных, подгруженных при помощи tidyquant - цены на топливо
+https://cran.r-project.org/web/packages/tidyquant/vignettes/TQ03-scaling-and-modeling-with-tidyquant.html
+https://cran.r-project.org/web/packages/tidyquant/vignettes/TQ01-core-functions-in-tidyquant.html
+
+```{r}
+library(tidyquant)
+gas_prices_monthly_raw <- tq_get(
+    x    = "GASREGCOVM", 
+    get  = "economic.data", 
+    from = "1990-01-01", 
+    to   = "2016-12-31") 
+gas_prices_monthly_raw
+
+```
+#Пример данных, подгруженных при помощи tidyquant - стоимость акций Apple и Amazon
+# Get quantitive data https://www.rdocumentation.org/packages/tidyquant/versions/0.5.9/topics/tq_get
+# https://fred.stlouisfed.org/
+
+```{r}
+
+mult_gets2 <- tq_get(c("AAPL", "AMZN"),
+                    get = "stock.prices",
+                    from = "2018-01-01",
+                    to   = "2019-01-01")
+mult_gets2
+```
+
+
+#Пример данных, подгруженных при помощи tidyquant - стоимость акций и дивиденды Apple и Amazon
+# Get quantitive data https://www.rdocumentation.org/packages/tidyquant/versions/0.5.9/topics/tq_get
+# https://fred.stlouisfed.org/
+```{r}
+
+mult_gets <- tq_get(c("AAPL", "AMZN"),
+                    get = c("stock.prices", "dividends"),
+                    from = "2018-01-01",
+                    to   = "2019-01-01")
+
+```
+
+#Отображение различных составляющих данных:
+```{r}
+mult_gets
+mult_gets[['stock.prices']][[2]]
+#mult_gets.aapl.stock.prices
+```
+#UMTMTI index
+#Value of Manufacturers' Total Inventories for All Manufacturing Industries, Million of Dollars, Monthly, Not Seasonally Adjusted
+
+```{r}
+umtmti <- read_excel('UMTMTI.xls', skip=10) %>%
+  mutate(observation_date = as_date(observation_date)) # по умолчанию будет использоваться формат дат, 
+                               # который не поддерживается ggplot2, 
+                               # поэтому преобразуем даты к нужному формату
+umtmti %>% head()
+```
+
+
+```{r}
+umtmti %>%
+  ggplot(aes(x = observation_date)) +
+    geom_line(aes(y = UMTMTI)) +
+    geom_smooth(aes(y = UMTMTI), se = F) +
+    scale_x_date(date_breaks = "12 month", date_labels = "%y") +
+    labs(x = NULL, y = NULL,
+         title = 'AMTMTI')
+```
+# Полный и сокращенный набор данных, преобразованные во временные ряды
+
+```{r}
+starting_date <- min(umtmti$observation_date)
+umtmti_ts <- umtmti %>% 
+  select(observation_date, UMTMTI) %>%
+  tk_ts(start = 
+          c(year(starting_date),month(starting_date)),
+        frequency = 12,
+        silent = TRUE) # отключаем предупреждение об отброшенном столбце date
+
+```
+
+```{r}
+umtmti2 <- umtmti %>%
+  filter (observation_date>"2011-12-01")
+```
+
+
+```{r}
+starting_date_new <- min(umtmti2$observation_date)
+umtmti_ts2 <- umtmti2 %>% 
+  select(observation_date, UMTMTI) %>%
+  tk_ts(start = 
+          c(year(starting_date_new),month(starting_date_new)),
+        frequency = 12,
+        silent = TRUE) # отключаем предупреждение об отброшенном столбце date
+
+```
+
+```{r}
+umtmti_ts
+```
+```{r}
+umtmti_ts2
+```
+
+```{r}
+has_timetk_idx(umtmti_ts2)
+```
+```{r}
+m_umtmti_ts2 <- umtmti_ts2 %>% ets()
+```
+
+
+Модели экспоненциального сглаживания основаны на выделении компонентов временного ряда - среднего уровня, тренда и сезонности. Поэтому данные компоненты можно извлечь из модели.
+
+
+```{r}
+decomp_m_umtmti_ts2 <- m_umtmti_ts2 %>% 
+  sw_tidy_decomp(rename_index = 'observation_date', timetk_idx = TRUE)
+decomp_m_umtmti_ts2 %>% head()
+```
+
+
+# Данные с выделенными компонентами ряда
+https://robjhyndman.com/eindhoven/2-1-StateSpace.pdf
+
+
+```{r}
+decomp_m_umtmti_ts2 %>%
+  pivot_longer(-observation_date, names_to = "key", values_to = "value") %>%
+
+  ggplot(aes(x = observation_date, y = value)) +
+  geom_line() +
+  facet_wrap(~ key, scales = "free_y") +
+  scale_x_date() +
+  labs(X = NULL, y = NULL,
+       title = "Закономерные компоненты ряда")
+```
+
+
+
+Параметры модели:
+
+```{r}
+m_umtmti_ts2 %>% sw_tidy()
+```
+
+#Параметры ETS модели
+```{r}
+m_umtmti_ts2 %>% sw_glance()
+```
+#Коэффициенты модели
+```{r}
+m_umtmti_ts2  %>% sw_tidy() %>% filter(term %in% c('alpha', 'beta', 'gamma'))
+```
+
+#Добавление проноза
+
+```{r}
+f_umtmti_ts2 <- m_umtmti_ts2 %>% forecast(h = 12)
+f_umtmti_ts2 %>% 
+  sw_sweep(rename_index = 'observation_date', timetk_idx = TRUE) %>% 
+  tail(n = 14)
+```
+
+#Прогноз и доверительные интервалы
+
+```{r}
+f_umtmti_ts2 %>% 
+  sw_sweep(rename_index = 'observation_date', timetk_idx = TRUE) %>%
+  ggplot(aes(x = observation_date, y = UMTMTI)) +
+  geom_ribbon(aes(ymin = lo.95, ymax = hi.95), fill = "gray60") +
+  geom_ribbon(aes(ymin = lo.80, ymax = hi.80), fill = "gray90") +
+  geom_line(aes(color = key)) +
+  scale_x_date(date_labels = "%Y", date_breaks = "1 year",
+               limits = c(ymd("2012-01-01"), NA)) +
+  labs(x = NULL, y = NULL,
+       title = "Прогноз запасов промышленности",
+       color = NULL)
+```
+
+
+```{r}
+models <- tribble(
+  ~lab,         ~f,     ~params,
+  "ets auto",   "ets", list(y = umtmti_ts2),
+  "ets a99",   "ets",  list(y = umtmti_ts2, alpha = 0.99, beta = 0.10, gamma = 0.01),
+  "ets 0.1",    "ets",  list(y = umtmti_ts2, alpha = 0.80, beta = 0.15, gamma = 0.01),
+  "ets damped", "ets",  list(y = umtmti_ts2, damped = FALSE),
+)
+models  
+```
+#https://purrr.tidyverse.org/reference/invoke.html
+```{r}
+models_fit <- 
+  models %>% 
+  mutate(fit = invoke_map(f, params))
+models_fit
+```
+
+```{r}
+models_perf <- 
+  models_fit %>% 
+    mutate(tidy = map(fit, sw_glance)) %>%
+    unnest(tidy)
+models_perf %>%
+  select(lab, MAPE, MASE)
+```
+```{r}
+models_fit %>%
+  mutate(tidy = map(fit, sw_augment, 
+                    timetk_idx = TRUE, 
+                    rename_index = "date")) %>%
+  unnest(tidy) %>%
+  ggplot(aes(x = date, y = .resid)) +
+  geom_hline(yintercept = 0, color = 'red', linetype = 'dashed') +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = 'loess', se = F) +
+  facet_wrap(~ lab, scale = 'free_y', ncol = 1) +
+  labs(x = NULL, y = NULL,
+       title = "Остатки моделей прогнозирования")
+```
+
+```{r}
+models_forecast <- 
+  models_fit %>%
+  mutate(fcast = map(fit, forecast, h = 24)) %>%
+  mutate(tidy = map(fcast, sw_sweep, timetk_idx = TRUE, 
+                    rename_index = "date")) %>%
+  unnest(tidy)
+models_forecast %>% tail()
+```
+```{r}
+models_forecast %>%
+  ggplot(aes(x = date, y = UMTMTI)) + 
+    geom_ribbon(aes(ymin = lo.95, ymax = hi.95), fill = "gray60") +
+    geom_ribbon(aes(ymin = lo.80, ymax = hi.80), fill = "gray90") +
+    geom_line(aes(color = key)) +
+    scale_x_date(limits = c(ymd("2012-01-01"), NA)) +
+    facet_wrap(~lab, ncol = 2) +
+    labs(x = NULL, y = NULL, color = NULL,
+         title = "Прогноз динамики показателя")
+```
+
+######################
+
+```{r}
+aug_m_umtmti_ts2_test <- m_umtmti_ts2 %>% 
+  sw_augment() 
+aug_m_umtmti_ts2_test %>% head()
+```
+
+
+```{r}
+aug_m_umtmti_ts2 <- m_umtmti_ts2 %>% 
+  sw_augment(rename_index = 'observation_date', 
+             timetk_idx = TRUE) # Эти аргументы добавлены для получения
+                                # даты в формате, который напрямую 
+                                # поддерживается gglpot2
+aug_m_umtmti_ts2 %>% head()
+```
+
+```{r}
+aug_m_umtmti_ts2 %>%
+  ggplot(aes(x = observation_date, y = .resid)) +
+  geom_hline(yintercept = 0, color = "red", linetype = 'dashed') +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = loess) +
+  scale_x_date() +
+  labs(x = NULL, y = NULL,
+       title = "Остатки модели ETS")
+```
+
+
+```{r}
+best_model <- 
+  models_perf %>%
+  top_n(n = 1, wt = desc(MASE)) # top_n сортирует по убыванию показателя, 
+                                # поэтому для выбора модели с наименьшей 
+                                # ошибкой,необходимо добавить desc(), 
+                                # чтобы обратить порядок сортировки
+best_model %>% select(lab, MASE, fit)
+```
+
+```{r}
+best_model %>%
+  mutate(fcast = map(fit, forecast, h = 24)) %>%
+  mutate(tidy = map(fcast, sw_sweep, 
+                    timetk_idx = TRUE, 
+                    rename_index = "date")) %>%
+  unnest(tidy, .drop = TRUE) %>% 
+  select(lab, date:women) %>%
+  tail(12)
+```
+
+
+

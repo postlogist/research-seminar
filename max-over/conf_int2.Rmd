@@ -1,0 +1,171 @@
+---
+Binomial distribution
+---
+
+# https://en.wikipedia.org/wiki/Binomial_distribution
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+options(digits = 4) #4 digits in output
+```
+
+
+
+```{r Load packages, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(readxl)
+```
+
+
+
+```{r}
+set1 <- read_excel('test_dataset3.xlsx',sheet = "1") 
+
+set2 <- read_excel('test_dataset3.xlsx',sheet = "2") 
+  
+set3 <- read_excel('test_dataset3.xlsx',sheet = "3") 
+
+set1 %>% head()
+```
+
+
+**Notes:**
+
+
+```{r histogram}
+ggplot(data = set1,aes(value)) +
+
+  geom_histogram(bins=20) +
+  
+  geom_vline(aes(xintercept = mean(value)), 
+              colour='red', 
+             linetype='dashed')+
+  ggtitle('Mean value') +
+  xlab('avg')
+```
+```{r}
+# Create a sample of 50 numbers which are incremented by 1.
+x <- seq(0,5000,by = 1)
+
+# Create the binomial distribution.
+y <- dbinom(x,5000,0.5)
+
+#plot(x,y)
+dataset_binomial <- tibble(x_val = x, y_val = y)
+#dataset_binomial
+
+ggplot(dataset_binomial) +
+ aes(x = x_val, y = y_val) +
+ geom_point(size = 1L, colour = "#26828e") +
+ labs(x = "Number of \"q\" outcomes", y = "Probability", title = "Binomial distribution (n=5000 , q=0.5)") +
+ theme_minimal()
+  
+```
+
+
+
+```{r Sample statistics}
+
+set_count1 <- sum(set1$value==1)
+set_count0 <- sum(set1$value==0)
+count_total <- nrow(set1)
+paste("Set count 1:", set_count1,"Set count 0:",set_count0, "Total count:",count_total)
+
+```
+
+R has prebuild functions for binomial distribution. pbinom() assesses cumulative probability of certain experiment outcome
+
+https://www.rdocumentation.org/packages/stats/versions/3.3/topics/Binomial
+https://www.tutorialspoint.com/r/r_binomial_distribution.htm
+
+
+```{r Standard Error for the sample mean}
+# Probability of getting current or less heads from all experiments
+result_prob <-pbinom(set_count1,count_total,0.5)
+result_prob
+```
+```{r Standard Error for the sample mean}
+# Probability of getting out of bound values
+out_of_bound_prob_high <-qbinom(0.995,count_total,0.5)
+out_of_bound_prob_low <-qbinom(0.005,count_total,0.5)
+out_of_bound_prob_high
+out_of_bound_prob_low
+```
+
+
+```{r Compare estimate to actual value}
+ggplot_data <- tibble(out_of_bound_prob_low,set_count1,out_of_bound_prob_high )
+ggplot(ggplot_data,
+       aes(x = 0)) +
+  geom_point(aes(y = set_count1)) +
+  geom_errorbar(aes(ymin = out_of_bound_prob_low, ymax = out_of_bound_prob_high), 
+                col = 'black', width = 0.05) +
+  labs(title = 'Assessing credibility of experiment outcomes',
+       y = 'Experiment outcomes',
+       x = NULL) +
+  geom_hline(aes(yintercept = set_count1),
+             col = 'red', linetype = 'dashed') +
+  xlim(-1, 1) +
+ylim(out_of_bound_prob_low*0.9, out_of_bound_prob_high*1.1)+
+   theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())+
+  coord_flip()
+```
+
+```{r}
+set1_modified <- set1 %>%
+  mutate(set= "set1")
+set1_modified
+```
+
+```{r}
+set2_modified <- set2 %>%
+  mutate(set= "set2")
+set2_modified
+```
+
+```{r}
+set3_modified <- set3 %>%
+  mutate(set= "set3")
+set3_modified
+```
+```{r}
+binded_sets <-rbind(set1_modified,set2_modified,set3_modified)
+binded_sets
+```
+
+
+
+```{r}
+binded_sets_nested <- 
+  binded_sets %>% 
+  group_by(set) %>%
+  nest()
+binded_sets_nested
+```
+
+```{r}
+bounds_estimation <- function(exp_set){
+  set_count1 <- sum(exp_set$value==1)
+  count_total <- nrow(exp_set)
+  out_of_bound_prob_high <-qbinom(0.995,count_total,0.5)
+  out_of_bound_prob_low <-qbinom(0.005,count_total,0.5)
+  result_prob <-pbinom(set_count1,count_total,0.5)
+  test = ifelse(result_prob>0.005 && result_prob<0.995,"credible","most likely cheating"  )
+  return( test)
+} 
+```
+
+
+
+```{r}
+binded_sets_nested_new <- binded_sets_nested %>%
+ mutate(result = map(data, bounds_estimation))
+binded_sets_nested_new [["result"]][[1]]
+binded_sets_nested_new [["result"]][[2]]
+binded_sets_nested_new [["result"]][[3]]
+```
+
+
+
