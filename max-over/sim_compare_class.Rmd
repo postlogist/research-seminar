@@ -1,0 +1,49 @@
+```{r}
+#suppressMessages(library(readr)) # считывание данных из текстовых файлов
+suppressMessages(library(tidyverse)) # манипулирование данными
+suppressMessages(library(ggplot2)) # визуализация
+suppressMessages(library(scales)) # Процентный формат для осей графиков
+suppressMessages(library(readxl))
+```
+
+https://r-analytics.blogspot.com/2012/03/t.html
+https://www.youtube.com/watch?v=pTmLQvMM-1M
+
+```{r}
+data_seq <- read_excel('seq.xlsx') 
+data_conv <- read_excel('conv.xlsx') 
+set.seed(43)
+```
+
+```{r}
+head(data_seq)
+```
+
+```{r}
+data_seq <- ...
+
+data_conv <- ...
+
+```
+
+```{r}
+both_sets <- ...
+both_sets
+```
+
+```{r}
+ggplot(data = both_sets, 
+```
+https://stackoverflow.com/questions/17414565/interpretation-of-stat-summary-mean-cl-boot-at-ggplot2
+
+```{r}
+ggplot(data = both_sets, ... =  +
+  stat_summary(fun.data=mean_cl_boot) +
+  
+```
+
+```{r}
+result <- t.test(system_time ~ scenario, data = both_sets)
+result
+```
+
