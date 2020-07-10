@@ -1,0 +1,345 @@
+---
+title: "Пример моделирования нелинейной: бег с препятствиями на 400 м"
+author: "Заходякин Г.В., postlogist@gmail.com"
+date: "10.04.2020"
+output: 
+  html_document: 
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+options(width = 100) # ширина текстового вывода
+options(digits = 3) # число знаков после запятой в выводе 
+```
+
+```{r Загрузка пакетов, message=FALSE}
+library(tidyverse) # манипулирование данными 
+library(ggplot2) # визуализация 
+library(ggfortify) # визуализация диагностических графиков
+library(modelr) # вспомогательные функции для работы с моделями
+library(broom) # преобразование результатов моделирования в табличный вид
+library(GGally) # построение матрицы диаграмм рассеяния 
+library(car) # функции для степенных преобразований
+library(purrr) # функциональное программирование
+```
+
+
+# Введение 
+
+В файле `data/runners.csv` находятся лучшие результаты в беге на 400 м с барьерами среди женщин за разные годы. Источник данных - [Wikipedia](https://en.wikipedia.org/wiki/400_metres_hurdles).
+
+```{r}
+runners <- read_csv2("data/runners.csv")
+head(runners) %>% knitr::kable()
+```
+
+Данные за некоторые сезоны полностью отсутствуют. Отфильтруем пустые строки.
+
+```{r}
+runners <- na.omit(runners)
+head(runners) %>% knitr::kable()
+```
+
+Посмотрим на данные
+
+```{r}
+runners %>%
+  ggplot(aes(Year, Time)) +
+  geom_point() +
+  geom_smooth(se = F) +
+  labs(title = 'Лучший результат сезона в беге на 400 м у женщин')
+```
+
+
+Очевидна нелинейная зависимость: до 1990 года результаты улучшались, затем вышли на плато.
+
+
+
+# Построение моделей
+
+## Модель линейной регрессии
+
+
+```{r}
+m_lin <- lm(Time ~ Year, data = runners)
+autoplot(m_lin)
+
+```
+
+В остатках видна нелинейная зависимость.
+
+Подготовим таблицу с прогнозом и визуализируем результат. Поскольку прогноз потребуется в дальнейшем для сравнения ошибки разных моделей, построим его на тех же данных, по которым строилась модель. Для этих данных известны фактические значения, которые нужны для расчета ошибки.
+
+```{r}
+pred_lin <- 
+  runners %>%
+  add_predictions(m_lin, var = "Predicted") %>%
+  select(Year, Time, Predicted)
+
+pred_lin %>%
+  ggplot(aes(Year, Time)) +
+  geom_point() +
+  geom_line(aes(Year, Predicted), color = "red") +
+  labs(title = "Прогноз результата в беге на 400 м по линейной модели")
+```
+
+
+## Модель с логарифмом для Y
+
+```{r}
+m_log <- lm(log10(Time) ~ Year, data = runners)
+autoplot(m_log)
+
+```
+
+Ситуация с остатками не улучшилась.
+
+При построении прогноза обратим внимание, что в этой модели была преобразована зависимая переменная. Функции `predict()` и `add_predictions()` будут строить прогноз для зависимой переменной в логарифмической шкале. Результат необходимо преобразовать в исходную шкалу вручную.
+
+```{r}
+pred_log <- 
+  runners %>%
+  add_predictions(m_log, var = "Predicted") %>%
+  select(Year, Time, Predicted) %>% # Прогноз логарифма результата
+  mutate(Predicted = 10^Predicted)
+
+pred_log %>%
+  ggplot(aes(Year, Time)) +
+  geom_point() +
+  geom_line(aes(Year, Predicted), color = "red") +
+  labs(title = "Прогноз результата в беге на 400 м по модели с log Y")
+
+```
+
+Прогноз по логарифмической модели очень похож на прогноз по линейной модели.
+
+
+## Модель с логарифмом для X
+
+```{r}
+m_logx <- lm(Time ~ log10(Year), data = runners)
+autoplot(m_logx)
+```
+
+Ситуация с остатками не улучшилась.
+
+В этой модели зависимая переменная не преобразовывалась, поэтому прогноз получаем сразу в нужной шкале.
+
+```{r}
+pred_logx <- 
+  runners %>%
+  add_predictions(m_logx, var = "Predicted") %>% # Не надо преобразовывать Y
+  select(Year, Time, Predicted)
+
+pred_logx %>%
+  ggplot(aes(Year, Time)) +
+  geom_point() +
+  geom_line(aes(Year, Predicted), color = "red") +
+  labs(title = "Прогноз результата в беге на 400 м по модели с log X")
+
+```
+
+Прогноз не отличается от предыдущих.
+
+
+## Модель с корнем Y
+
+```{r}
+m_sqrt <- lm(sqrt(Time) ~ Year, data = runners)
+autoplot(m_sqrt)
+```
+
+Ситуация с остатками не улучшилась.
+
+
+Посчитаем прогноз. Здесь преобразовывали Y, поэтому нужно пересчитать прогноз в исходную шкалу.
+
+```{r}
+pred_sqrt <- 
+  runners %>%
+  add_predictions(m_sqrt, var = "Predicted") %>%
+  select(Year, Time, Predicted) %>% # Прогноз логарифма результата
+  mutate(Predicted = Predicted^2)
+
+pred_sqrt %>%
+  ggplot(aes(Year, Time)) +
+  geom_point() +
+  geom_line(aes(Year, Predicted), color = "red") +
+  labs(title = "Прогноз результата в беге на 400 м по модели с корнем")
+```
+
+
+## Модель с 1/Y
+
+```{r}
+m_inv <- lm(1/Time ~ Year, data = runners)
+autoplot(m_inv)
+```
+
+Ситуация с остатками не улучшилась.
+
+
+Прогноз также надо пересчитать в исходную шкалу.
+
+```{r}
+pred_inv <- 
+  runners %>%
+  add_predictions(m_inv, var = "Predicted") %>%
+  select(Year, Time, Predicted) %>% # Прогноз 1/результата
+  mutate(Predicted = 1/Predicted)
+
+pred_inv %>%
+  ggplot(aes(Year, Time)) +
+  geom_point() +
+  geom_line(aes(Year, Predicted), color = "red") +
+  labs(title = "Прогноз результата в беге на 400 м по модели с 1/Y")
+
+```
+
+
+## Модель с преобразованием Бокса-Кокса
+
+Определим параметр степенного преобразования, дающий наиболее близкое к нормальному распределение остатков. 
+
+```{r Подбор степени для данных с нелинейной зависимостью}
+powerTransform(m_lin)
+```
+
+
+```{r}
+
+m_pow <- lm(Time^-6.5 ~ Year, data = runners)
+autoplot(m_pow)
+
+```
+
+Результат по-прежнему плохой.
+
+Считаем прогноз, не забыв применить обратное преобразование.
+
+```{r}
+pred_pow <- 
+  runners %>%
+  add_predictions(m_pow, var = "Predicted") %>%
+  select(Year, Time, Predicted) %>% # Прогноз 1/результата
+  mutate(Predicted = Predicted^(1/-6.5))
+
+pred_pow %>%
+  ggplot(aes(Year, Time)) +
+  geom_point() +
+  geom_line(aes(Year, Predicted), color = "red") +
+  labs(title = "Прогноз результата в беге на 400 м по модели с преобразованием Бокса-Кокса")
+```
+
+## Полиномиальная модель
+
+Попробуем построить модель с полиномом второй степени:
+
+```{r}
+m_poly <- lm(Time ~ poly(Year, 2, raw = T), data = runners)
+autoplot(m_poly)
+```
+
+Результат лучше, чем предыдущие - распределение меньше отличается от нормального и менее выражена нелинейность остатков.
+
+Попробуем полином 3 степени:
+
+```{r}
+m_poly <- lm(Time ~ poly(Year, 3, raw = T), data = runners)
+autoplot(m_poly)
+```
+
+Результат обнадеживающий.
+
+
+Строим прогноз по полиномиальной модели. Он сразу получается в исходной шкале, т.к. Y не преобразовывали.
+
+```{r}
+pred_poly <- 
+  runners %>%
+  add_predictions(m_poly, var = "Predicted") %>%
+  select(Year, Time, Predicted)
+
+pred_poly %>%
+  ggplot(aes(Year, Time)) +
+  geom_point() +
+  geom_line(aes(Year, Predicted), color = "red") +
+  labs(title = "Прогноз результата в беге на 400 м по полиномиальной модели")
+```
+
+
+# Сравнение моделей
+
+## Функция для расчета ошибок
+
+Поскольку нам необходимо сравнить множество моделей, создадим функцию, которая вычисляет необходимые показатели ошибки на основе двух векторов - факт и прогноз.
+
+```{r}
+errors <- function(actual, predicted) {
+  error <- actual - predicted
+  abs_error <- abs(actual - predicted)
+  percent_error <- abs_error/actual
+  
+  ME <- mean(error, na.rm = T)
+  MAE <- mean(abs_error, na.rm = T)
+  MAPE <- mean(percent_error, na.rm = T)
+  MSE <- mean(error^2, na.rm = T)
+  RMSE <- sqrt(MSE)
+  
+  tibble(ME, MAE, MAPE, MSE, RMSE)
+}
+```
+
+Пробуем применить функцию к прогнозу по линейной модели:
+
+```{r}
+errors(pred_lin$Time, pred_lin$Predicted)
+```
+
+
+Или так, чтобы не писать $:
+
+```{r}
+pred_lin %>%
+  with(errors(Time, Predicted))
+```
+
+
+## Сравнение моделей
+
+Мы могли бы вручную применить теперь функцию к каждой таблице прогноза и сравнить результаты, но лучше сделать это автоматически, сразу для всех моделей. 
+
+Чтобы понимать, что происходит, прочитайте главу [Many Models](https://r4ds.had.co.nz/many-models.html) в книге R for Data Science. 
+
+
+
+Объединим все прогнозы в одну таблицу с помощью функции `bind_rows()`. Эта функция позволяет удобно подписать, из какой исходной таблицы взята каждая строка.
+Затем сгруппируем данные по названию модели и для каждой группы применим нашу функцию для расчета ошибок.
+
+
+Объяснения [тут](https://r4ds.had.co.nz/many-models.html#creating-list-columns).
+
+```{r}
+all_models <- 
+  bind_rows("Линейная модель" = pred_lin, 
+          "Модель с log Y" = pred_log, 
+          "Модель с log X" = pred_logx, 
+          "Модель с 1/Y" = pred_inv, 
+          "Модель с sqrt Y" = pred_sqrt,
+          "Модель Бокса-Кокса" = pred_pow, 
+          "Полиномиальная модель" = pred_poly,
+          .id = "Model")
+
+all_models %>%
+  group_by(Model) %>%
+  summarise(errors = list(errors(Time, Predicted))) %>%
+  unnest() %>%
+  arrange(MAPE) %>%
+  knitr::kable()
+```
+
+
+Лучший по MAPE результат получился по полиномиальной модели. Остальные модели по этому показателю не различаются и примерно в 2 раза хуже.
+
+
