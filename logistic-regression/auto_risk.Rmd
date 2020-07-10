@@ -1,0 +1,136 @@
+---
+title: "Auto Insurance Risk Prediction Using Logistic Regression"
+author: "Morozova Y.A."
+date: '20.04.2020'
+output: html_document
+---
+
+```{r message = FALSE}
+library(tidyverse)
+library(mlr)
+```
+
+```{r}
+auto_risk <- read_csv2("AutoInsuranceRisk.csv")
+```
+
+```{r}
+auto_risk$claim <- ifelse(auto_risk$claim=="Yes",1,0)
+```
+
+
+
+```{r}
+auto_risk <- auto_risk %>% filter(age < max(age))
+
+```
+
+
+```{r warning = FALSE}
+ggplot(auto_risk) +
+  geom_bar(aes(x = age, fill = as.character(claim)), position = "fill", binwidth = 5) +
+  labs(y = "Probability of claim", fill = "Claim")
+
+ggplot(auto_risk) +
+  geom_bar(aes(x = gender, fill = as.character(claim)), position = "fill") +
+  labs(y = "Probability of claim", fill = "Claim")
+
+ggplot(auto_risk) +
+  geom_bar(aes(x = children, fill = as.character(claim)), position = "fill") +
+  labs(y = "Probability of claim", fill = "Claim")
+
+ggplot(auto_risk) +
+  geom_bar(aes(x = profession, fill = as.character(claim)), position = "fill") +
+  labs(y = "Probability of claim", fill = "Claim") +
+  theme(axis.text.x = element_text(angle = 90))
+
+ggplot(auto_risk) +
+  geom_bar(aes(x = customer_type, fill = as.character(claim)), position = "fill") +
+  labs(y = "Probability of claim", fill = "Claim") 
+
+ggplot(auto_risk) +
+  geom_bar(aes(x = multiple_cars, fill = as.character(claim)), position = "fill") +
+  labs(y = "Probability of claim", fill = "Claim")
+
+ggplot(auto_risk) +
+  geom_bar(aes(x = driving_licence_years, fill = as.character(claim)), position = "fill", binwidth = 2) +
+  labs(y = "Probability of claim", fill = "Claim")
+
+ggplot(auto_risk) +
+  geom_bar(aes(x = car_category, fill = as.character(claim)), position = "fill") +
+  labs(y = "Probability of claim", fill = "Claim")
+
+ggplot(auto_risk) +
+  geom_bar(aes(x = annual_kilometers, fill = as.character(claim)), position = "fill", binwidth = 1000) +
+  labs(y = "Probability of claim", fill = "Claim")
+
+ggplot(auto_risk) +
+  geom_bar(aes(x = gearbox, fill = as.character(claim)), position = "fill") +
+  labs(y = "Probability of claim", fill = "Claim")
+
+ggplot(auto_risk) +
+  geom_bar(aes(x = fuel, fill = as.character(claim)), position = "fill") +
+  labs(y = "Probability of claim", fill = "Claim")
+
+```
+
+```{r}
+claim_lr <- glm(claim ~ age + gender + children + profession + car_category + fuel, auto_risk, family = binomial(link = "logit"))
+summary(claim_lr)
+
+```
+
+```{r}
+exp(claim_lr$coefficients)
+```
+
+```{r}
+auto_risk <- auto_risk %>% mutate(age_category = ifelse(age < 35, "younger 35", ifelse(age <= 75, "35-75", "older 75")))
+
+ggplot(auto_risk) +
+  geom_bar(aes(x = age_category, fill = as.character(claim)), position = "fill") +
+  labs(y = "Probability of claim", fill = "Claim")
+
+```
+
+```{r}
+auto_risk <- auto_risk %>% mutate(prof_category = ifelse(profession=="Public Sector - Manager", "PS Manager", "Other"))
+
+ggplot(auto_risk) +
+  geom_bar(aes(x = prof_category, fill = as.character(claim)), position = "fill") +
+  labs(y = "Probability of claim", fill = "Claim")
+
+```
+
+
+```{r}
+claim_lr2 <- glm(claim ~ age_category + gender + children + prof_category + car_category + fuel, auto_risk, family = binomial(link = "logit"))
+summary(claim_lr2)
+
+```
+
+```{r}
+exp(claim_lr2$coefficients)
+```
+
+```{r}
+auto_risk_pred <- auto_risk %>% mutate(prob = predict(claim_lr2, newdata = ., type = "response" ), 
+                                       claim_pred = ifelse(prob > 0.5, 1, 0))
+```
+
+```{r}
+table(predicted = auto_risk_pred$claim_pred, actual = auto_risk_pred$claim)
+measureACC(auto_risk_pred$claim, auto_risk_pred$claim_pred)
+```
+
+```{r}
+auto_risk_pred <- auto_risk_pred %>% mutate(claim_pred2 = ifelse(prob > 0.2, 1, 0))
+table(predicted = auto_risk_pred$claim_pred2, actual = auto_risk_pred$claim)
+measureACC(auto_risk_pred$claim, auto_risk_pred$claim_pred2)
+```
+
+```{r}
+ggplot(auto_risk_pred) +
+  geom_point(aes(prob, claim), alpha = 0.05, size = 2, color = "blue")
+```
+

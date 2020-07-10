@@ -1,0 +1,240 @@
+---
+title: "South India traveler's clusterization"
+author: "Morozova Y.A."
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse) 
+library(NbClust)
+library(factoextra)
+library(cluster)
+library(GGally)
+```
+
+# Dataset Information
+
+The dataset [`traveler_reviews.csv`](https://archive.ics.uci.edu/ml/datasets/BuddyMove+Data+Set) was gathered from destination reviews published by 249 reviewers of holidayiq.com till October 2014. Reviews falling in 6 categories among destinations across South India were considered and the count of reviews in each category for every reviewer (traveler) is captured.
+
+![The HolidayIQ Club](holidayiq.png)
+
+Attribute Information:  
+- User Id: Unique user id  
+- Sports: Number of reviews on stadiums, sports complex, etc.  
+- Religious: Number of reviews on religious institutions  
+- Nature: Number of reviews on beach, lake, river, etc.  
+- Theatre: Number of reviews on theatres, exhibitions, etc.  
+- Shopping: Number of reviews on malls, shopping places, etc.  
+- Picnic: Number of reviews on parks, picnic spots, etc.  
+
+![Mysore Palace in South India](Mysore_Palace.jpg)
+
+![Alleppey Backwaters in South India](Nature.jpg)
+
+# Data Preparation
+
+```{r, message=FALSE, warning=FALSE}
+d <- read_csv('traveler_reviews.csv')
+glimpse(d)
+```
+
+
+```{r}
+summary(d)
+```
+
+```{r}
+d_scaled <- d %>% select(-`User Id`) %>% scale()
+head(d_scaled)
+```
+
+```{r}
+d_scaled_tall <- d_scaled %>% as_tibble() %>% gather(key = "variable")
+ggplot(data = d_scaled_tall, aes(x = variable, y = value)) +
+  geom_boxplot()
+```
+
+```{r, message=FALSE, warning=FALSE}
+fviz_nbclust(d_scaled, kmeans, method = "wss") +
+    geom_vline(xintercept = 4, linetype = 2) +
+  labs(subtitle = "Elbow method")
+```
+
+```{r, message=FALSE, warning=FALSE}
+fviz_nbclust(d_scaled, kmeans, method = "silhouette") +
+  labs(subtitle = "Silhouette method")
+```
+```{r, message=FALSE, warning=FALSE}
+set.seed(123)
+fviz_nbclust(d_scaled, kmeans, method = "gap_stat", nboot = 50)+
+  labs(subtitle = "Gap statistic method")
+```
+
+
+# K-means clustering
+
+```{r}
+set.seed(123)
+km_clusters <- kmeans(d_scaled, centers = 3, nstart = 25)
+fviz_cluster(km_clusters, data = d_scaled)
+```
+
+```{r}
+km_clusters$size
+```
+
+```{r}
+km_clusters$centers %>% t() %>% round(3)
+```
+
+
+```{r}
+centroids_tall <- km_clusters$centers %>% 
+  as_tibble() %>% 
+  mutate(cluster = rownames(km_clusters$centers)) %>% 
+  gather(key = var, value = value, Sports:Picnic)
+
+ggplot(data = centroids_tall, 
+       aes(x = cluster, y = value, fill = cluster)) +
+  geom_bar(stat = "identity") + 
+  facet_wrap(~ var, ncol = 3)
+```
+
+```{r}
+sil <- silhouette(km_clusters$cluster, dist(d_scaled))
+fviz_silhouette(sil)
+```
+
+```{r, message=FALSE, warning=FALSE}
+d_mutated <- d %>% 
+  mutate(Total_reviews = Sports + Religious + Nature + Theatre + Shopping + Picnic,
+         Sports = Sports/Total_reviews,
+         Religious = Religious/Total_reviews,
+         Nature = Nature/Total_reviews,
+         Theatre = Theatre/Total_reviews,
+         Shopping = Shopping/Total_reviews,
+         Picnic = Picnic/Total_reviews)
+
+rownames(d_mutated) <- d_mutated$`User Id`
+d_mutated <- d_mutated %>% select(-`User Id`) %>% scale()
+head(d_mutated)
+```
+
+```{r}
+cor(d_mutated) %>% round(3)
+```
+
+
+```{r}
+d_mutated <- as_tibble(d_mutated) %>% select(-Shopping)
+cl_nb <- NbClust(data = d_mutated, distance = "euclidean",
+                  min.nc = 2, max.nc = 9, 
+                  method = "kmeans", index = "all")
+```
+
+
+```{r}
+fviz_nbclust(cl_nb)
+```
+
+```{r}
+set.seed(127)
+km_clusters2 <- kmeans(d_mutated, centers = 3, nstart = 25) 
+```
+
+```{r}
+fviz_cluster(km_clusters2, data = d_mutated)
+```
+
+```{r}
+km_clusters2$size
+```
+
+```{r}
+km_clusters2$centers %>% t() %>% round(3)
+```
+
+```{r}
+centroids_tall2 <- km_clusters2$centers %>% 
+  as_tibble() %>% 
+  mutate(cluster = rownames(km_clusters2$centers)) %>% 
+  gather(key = var, value = value, Sports:Total_reviews)
+```
+
+```{r}
+ggplot(data = centroids_tall2, 
+       aes(x = cluster, y = value, fill = cluster)) +
+  geom_bar(stat = "identity") + 
+  facet_wrap(~ var, ncol = 3)
+
+```
+
+```{r}
+sil <- silhouette(km_clusters2$cluster, dist(d_mutated))
+fviz_silhouette(sil)
+```
+
+# Hierarchical clustering
+
+```{r}
+set.seed(127)
+hclust_complete_sample <- eclust(sample(as.matrix(d_mutated), 40), FUNcluster="hclust", hc_method="complete", k = 3)
+fviz_dend(hclust_complete_sample, show_labels=T, main = 'Dendrogram using complete linkage')
+```
+
+```{r}
+hclust_complete <- eclust(d_mutated, FUNcluster="hclust", hc_method="complete", k = 4)
+fviz_dend(hclust_complete, show_labels=F, main = 'Dendrogram using complete linkage')
+```
+
+```{r}
+fviz_cluster(hclust_complete)
+```
+
+```{r}
+fviz_silhouette(hclust_complete)
+```
+
+```{r}
+cbind(d_mutated, cluster = hclust_complete$cluster) %>%
+  as_tibble() %>%
+  gather(key = var, value = value, Sports:Total_reviews) %>%
+  group_by(cluster, var) %>%
+  summarize(value = mean(value)) %>%
+  ggplot(aes(x = cluster, y = value, fill = as.character(cluster))) +
+  geom_bar(stat = "identity") + 
+  facet_wrap(~ var, ncol = 3)
+```
+
+
+```{r}
+hclust_single <- eclust(d_mutated, FUNcluster="hclust", hc_method = "single", k=4) 
+fviz_dend(hclust_single, show_labels=F, main = 'Dendrogram using single linkage')
+```
+
+```{r}
+fviz_cluster(hclust_single)
+```
+
+```{r}
+fviz_silhouette(hclust_single)
+```
+
+```{r}
+hclust_average <- eclust(d_mutated, FUNcluster="hclust", hc_method ="average",k=4)
+fviz_dend(hclust_average, show_labels=F, main = 'Dendrogram using average linkage')
+```
+
+```{r}
+fviz_cluster(hclust_average)
+```
+
+```{r}
+fviz_silhouette(hclust_average)
+```

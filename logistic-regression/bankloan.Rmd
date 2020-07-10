@@ -1,0 +1,54 @@
+---
+title: "Loan defaults prediction"
+author: "Morozova Y.A."
+date: '21.04.2020'
+output: html_document
+---
+
+```{r message = FALSE}
+library(tidyverse)
+library(mlr)
+```
+
+# Data structure
+
+File `bankloan.csv` contains hypothetical data that concerns a bank's efforts to reduce the rate of loan defaults. The file contains financial and demographic information on 850 past and prospective customers. 
+
+The first 700 cases are past customers, last 150 are prospective customers:
+
+- age - Age in years  
+- ed - Level of education (1 - "Did not complete high school", 2 - "High school degree", 3 - "Some college", 4 - "College degree")  
+- employ - Years with current employer  
+- address - Years at current address  
+- income - Household income in thousands  
+- debtinc - Debt to income ratio (x100)  
+- creddebt - Credit card debt in thousands  
+- default - Previously defaulted (0 - "No", 1 - "Yes")
+
+```{r}
+bankloan <- read_csv("bankloan.csv")
+bankloan_past <- head(bankloan, 700)
+bankloan_prosp <- tail(bankloan, 150)
+```
+
+# Tasks
+
+1) Perform exploratory data analysis and choose predictors for loan default prediction model.
+
+```{r}
+
+```
+
+2) Build logistic regression model for a loan default prediction and interpret estimated coefficients.
+
+```{r}
+
+```
+
+3) Calculate loan default predictions for past customers using logistic regression model and compare it with actual data. Visualize results.
+
+```{r}
+
+```
+
+4) Calculate loan default predictions for prospective customers using logistic regression model.

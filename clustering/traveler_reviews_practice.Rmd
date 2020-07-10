@@ -1,0 +1,62 @@
+---
+title: "South India traveler's clusterization"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+
+---
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse) 
+library(NbClust)
+library(factoextra)
+library(cluster)
+library(GGally)
+```
+
+# Dataset Information
+
+The dataset [`traveler_reviews.csv`](https://archive.ics.uci.edu/ml/datasets/BuddyMove+Data+Set) was populated from destination reviews published by 249 reviewers of holidayiq.com till October 2014. Reviews falling in 6 categories among destinations across South India were considered and the count of reviews in each category for every reviewer (traveler) is captured.
+
+Attribute Information:
+- User Id: Unique user id
+- Sports: Number of reviews on stadiums, sports complex, etc.
+- Religious: Number of reviews on religious institutions
+- Nature: Number of reviews on beach, lake, river, etc.
+- Theatre: Number of reviews on theatres, exhibitions, etc.
+- Shopping: Number of reviews on malls, shopping places, etc.
+- Picnic: Number of reviews on parks, picnic spots, etc.
+
+
+```{r, message=FALSE, warning=FALSE}
+d <- read_csv('traveler_reviews.csv')
+glimpse(d)
+```
+
+# Tasks
+
+1) Prepare data for clustering. Analyze distributions of variables. Perform normalization.
+
+```{r}
+
+```
+
+2) Choose the optimal number of clusters, using Elbow method, Silhouette method, Gap statistic method.
+
+```{r}
+
+```
+
+3) Perform clustering using k-means algorithm. Visualize and interpret clusters.
+
+```{r}
+
+```
+
+4) Evaluate clusterization by Silhouette plot.
+
+```{r}
+
+```
+
