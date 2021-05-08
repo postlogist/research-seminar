@@ -7,7 +7,7 @@ All R packages required for our course are included (hopefully).
 
 You can use this software by unzipping archive to a reasonable folder on your computer. Root of C: or D: drive is recommended. Paths containing non-latin characters or spaces won't work.
 
-After unzipping, run file: `Rportable/startR.cmd`. This should start a new RStudio session after a few moments.
+After unzipping, run file: `Rportable4/startR.cmd`. This should start a new RStudio session after a few moments.
 
 Now you are ready to go. See the  section on configuring R-Studio below.
 
